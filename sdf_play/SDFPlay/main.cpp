@@ -1,5 +1,8 @@
 #include <stdlib.h>
 #include "SDL.h"
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <gl/gl.h>
 
 SDL_Surface *screen;
 
@@ -11,8 +14,37 @@ int main(int argc, char *argv[])
     }
 
 	screen = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_OPENGL);
+	
+	glViewport(0, 0, 800, 600);
+	glShadeModel(GL_SMOOTH);
+	glClearColor(0.2f, 0.2f, 0, 1);
+	glClearDepth(1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	glMatrixMode(GL_PROJECTION);
+	glOrtho(0, 800, 0, 600, 0, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_COLOR_MATERIAL);
+
+	glBegin(GL_TRIANGLES);
+
+	glColor3f(1, 0, 0); glVertex3f(10, 10, 0);
+	glColor3f(0, 1, 0); glVertex3f(10, 100, 0);
+	glColor3f(0, 0, 1); glVertex3f(100, 10, 0);
+
+	glEnd();
+	glFlush();
+
 
     SDL_Event event;
+
+	SDL_GL_SwapBuffers();
+
 
     while ( SDL_WaitEvent(&event) ) {
         switch (event.type) {
