@@ -46,12 +46,12 @@ int main(int argc, char *argv[])
 	init_glsl();
 
 	GLhandleARB vertex = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
-	const GLcharARB *progVert = "void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; }" ;
+	const GLcharARB *progVert = "varying vec4 vcol; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	glShaderSourceARB(vertex, 1, &progVert, NULL);
 	glCompileShaderARB(vertex);
 	
 	GLhandleARB frag = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
-	const GLcharARB *progFrag = "void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); }";
+	const GLcharARB *progFrag = "varying vec4 vcol; void main() { gl_FragColor = vec4(0.1, 0.5, 0.2, 1.0) * vcol; }";
 	glShaderSourceARB(frag, 1, &progFrag, NULL);
 	glCompileShaderARB(frag);
 
@@ -65,9 +65,9 @@ int main(int argc, char *argv[])
 
 	glBegin(GL_TRIANGLES);
 
-	glColor3f(1, 0, 0); glVertex3f(110, 110, 0);
-	glColor3f(0, 1, 0); glVertex3f(110, 200, 0);
-	glColor3f(0, 0, 1); glVertex3f(200, 110, 0);
+	glColor3f(0, 1, 0); glVertex3f(110, 110, 0);
+	glColor3f(0, 0, 1); glVertex3f(110, 200, 0);
+	glColor3f(1, 0, 0); glVertex3f(200, 110, 0);
 
 	glEnd();
 	glFlush();
