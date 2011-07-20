@@ -1,63 +1,4 @@
-/*
-    SDL - Simple DirectMedia Layer
-    Copyright (C) 1997-2009 Sam Lantinga
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-    Sam Lantinga
-    slouken@libsdl.org
-*/
-
-/** @file SDL_opengl.h
- *  This is a simple file to encapsulate the OpenGL API headers
- */
-
-#include "SDL_config.h"
-
-#ifdef __WIN32__
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-#define NOMINMAX	/* Don't defined min() and max() */
-#endif
-#include <windows.h>
-#endif
-#ifndef NO_SDL_GLEXT
-#define __glext_h_  /* Don't let gl.h include glext.h */
-#endif
-#if defined(__MACOSX__)
-#include <OpenGL/gl.h>	/* Header File For The OpenGL Library */
-#include <OpenGL/glu.h>	/* Header File For The GLU Library */
-#elif defined(__MACOS__)
-#include <gl.h>		/* Header File For The OpenGL Library */
-#include <glu.h>	/* Header File For The GLU Library */
-#else
-#include <GL/gl.h>	/* Header File For The OpenGL Library */
-#include <GL/glu.h>	/* Header File For The GLU Library */
-#endif
-#ifndef NO_SDL_GLEXT
-#undef __glext_h_
-#endif
-
-/** @name GLext.h
- *  This file taken from "GLext.h" from the Jeff Molofee OpenGL tutorials.
- *  It is included here because glext.h is not available on some systems.
- *  If you don't want this version included, simply define "NO_SDL_GLEXT"
- */
-/*@{*/
-#ifndef NO_SDL_GLEXT
-#if !defined(__glext_h_) && !defined(GL_GLEXT_LEGACY)
+#ifndef __glext_h_
 #define __glext_h_
 
 #ifdef __cplusplus
@@ -6552,5 +6493,3 @@ typedef void (APIENTRYP PFNGLSTRINGMARKERGREMEDYPROC) (GLsizei len, const GLvoid
 #endif
 
 #endif
-#endif /* NO_SDL_GLEXT */
-/*@}*/

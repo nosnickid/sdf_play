@@ -1,8 +1,11 @@
 #include <stdlib.h>
-#include "SDL.h"
-#define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
 #include <gl/gl.h>
+#include <gl/glu.h>
+#include "SDL.h"
+#include "glsl.h"
+
 
 SDL_Surface *screen;
 
@@ -40,6 +43,34 @@ int main(int argc, char *argv[])
 	glEnd();
 	glFlush();
 
+	init_glsl();
+
+	GLhandleARB vertex = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+	const GLcharARB *progVert = "void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; }" ;
+	glShaderSourceARB(vertex, 1, &progVert, NULL);
+	glCompileShaderARB(vertex);
+	
+	GLhandleARB frag = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+	const GLcharARB *progFrag = "void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); }";
+	glShaderSourceARB(frag, 1, &progFrag, NULL);
+	glCompileShaderARB(frag);
+
+	GLhandleARB prog = glCreateProgramObjectARB();
+	glAttachObjectARB(prog, vertex);
+	glAttachObjectARB(prog, frag);
+	
+	glLinkProgramARB(prog);
+
+	glUseProgramObjectARB(prog);
+
+	glBegin(GL_TRIANGLES);
+
+	glColor3f(1, 0, 0); glVertex3f(110, 110, 0);
+	glColor3f(0, 1, 0); glVertex3f(110, 200, 0);
+	glColor3f(0, 0, 1); glVertex3f(200, 110, 0);
+
+	glEnd();
+	glFlush();
 
     SDL_Event event;
 
