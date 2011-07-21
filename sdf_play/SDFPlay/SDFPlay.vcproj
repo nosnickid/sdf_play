@@ -41,13 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\3rdparty\sdl-1.2.14\include"
+				AdditionalIncludeDirectories="..\..\3rdparty\sdl-1.2.14\include;..\..\3rdparty\oglconsole"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -185,6 +185,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\3rdparty\oglconsole\oglconsole.c"
+				>
+			</File>
+			<File
 				RelativePath=".\win32_glsl.cpp"
 				>
 			</File>
@@ -200,6 +204,10 @@
 			</File>
 			<File
 				RelativePath=".\glsl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\3rdparty\oglconsole\oglconsole.h"
 				>
 			</File>
 		</Filter>
