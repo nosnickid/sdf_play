@@ -7,6 +7,8 @@
 #include "glsl.h"
 #include "oglconsole.h"
 
+#define SDFPLAY_VERSION "0.1 HEHE"
+
 SDL_Surface *screen;
 
 OGLCONSOLE_Console console;
@@ -14,6 +16,13 @@ OGLCONSOLE_Console console;
 GLhandleARB prog;
 
 int done = 0;
+
+void APIENTRY theGlSlErrorHandler(GLcharARB *msg) 
+{
+	OGLCONSOLE_Print(msg);
+	OGLCONSOLE_SetVisibility(1);
+	
+}
 
 
 void drawScene()
@@ -97,17 +106,16 @@ int main(int argc, char *argv[])
 
 	console = OGLCONSOLE_Create();
 	OGLCONSOLE_EnterKey(cmdCb);
-	OGLCONSOLE_Print("SDF PLAY V0.1 (LOL)");
+	OGLCONSOLE_Print("SDF PLAY V%s (LOL)\n", SDFPLAY_VERSION);
 
 	init_glsl();
+	glslSetErrorHandler(&theGlSlErrorHandler);
 
 	const GLcharARB *progVert = "varying vec4 vcol; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	const GLcharARB *progFrag = "varying vec4 vcol; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
 	prog = createShaderFromProgs(progVert, progFrag);
 
-
     SDL_Event event;
-
 
 	atexit(SDL_Quit);
 

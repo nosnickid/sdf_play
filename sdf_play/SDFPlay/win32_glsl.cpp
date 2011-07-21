@@ -7,6 +7,8 @@ PFNGLCOMPILESHADERARBPROC glCompileShaderARB = NULL;
 PFNGLUSEPROGRAMOBJECTARBPROC glUseProgramObjectARB = NULL;
 PFNGLATTACHOBJECTARBPROC glAttachObjectARB = NULL;
 PFNGLLINKPROGRAMARBPROC glLinkProgramARB = NULL;
+PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB = NULL;
+PFNGLGETINFOLOGARBPROC glGetInfoLogARB = NULL;
 
 void init_glsl()
 {
@@ -17,4 +19,6 @@ void init_glsl()
 	glUseProgramObjectARB = (PFNGLUSEPROGRAMOBJECTARBPROC)wglGetProcAddress("glUseProgramObjectARB");
 	glAttachObjectARB = (PFNGLATTACHOBJECTARBPROC)wglGetProcAddress("glAttachObjectARB");
 	glLinkProgramARB = (PFNGLLINKPROGRAMARBPROC)wglGetProcAddress("glLinkProgramARB");
+	glGetObjectParameterivARB = (PFNGLGETOBJECTPARAMETERIVARBPROC)wglGetProcAddress("glGetObjectParameterivARB");
+	glGetInfoLogARB = (PFNGLGETINFOLOGARBPROC)wglGetProcAddress("glGetInfoLogARB");
 }

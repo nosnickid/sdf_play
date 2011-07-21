@@ -21,8 +21,15 @@ extern PFNGLCOMPILESHADERARBPROC glCompileShaderARB;
 extern PFNGLUSEPROGRAMOBJECTARBPROC glUseProgramObjectARB;
 extern PFNGLATTACHOBJECTARBPROC glAttachObjectARB;
 extern PFNGLLINKPROGRAMARBPROC glLinkProgramARB;
+extern PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB;
+extern PFNGLGETINFOLOGARBPROC glGetInfoLogARB;
+
+typedef void (APIENTRYP PFNGLSLERRORHANDLER) (GLcharARB *message);
 
 void init_glsl();
+
+void glslSetErrorHandler(PFNGLSLERRORHANDLER handler);
+
 
 GLhandleARB createShaderFromProgs(const GLcharARB *vertProg, const GLcharARB *fragProg);
 

@@ -312,6 +312,7 @@ void OGLCONSOLE_EditConsole(OGLCONSOLE_Console console) { programConsole = C; }
 /* Show or hide a console */
 void OGLCONSOLE_SetVisibility(int visible)
 {
+	userConsole->visibility = visible;
 }
 
 /* Get current configuration information about a console */
