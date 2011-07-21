@@ -24,5 +24,7 @@ extern PFNGLLINKPROGRAMARBPROC glLinkProgramARB;
 
 void init_glsl();
 
+GLhandleARB createShaderFromProgs(const GLcharARB *vertProg, const GLcharARB *fragProg);
+
 
 #endif
