@@ -28,13 +28,13 @@ void APIENTRY theGlSlErrorHandler(GLcharARB *msg)
 	
 }
 
-GLuint textureId;
 GLenum frameBuffer;
-GLenum renderBuffer;
+GLuint textureId;
+GLenum depthBuffer;
 
 void initGraphicsShit() 
 {
-	/*GLuint textureId;
+	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_2D, textureId);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -42,37 +42,30 @@ void initGraphicsShit()
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // automatic mipmap
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 800, 600, 0,
-				 GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
+	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// We'll render first time into this  background badboy.
-	glGenRenderbuffersEXT(1, &renderBuffer);
-	glBindRenderbufferEXT(renderBuffer);
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA, 800, 600);
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 800, 600);
-	glBindRenderbufferEXT(0);
+	// We want a temp depth buffer please.
+	glGenRenderbuffersEXT(1, &depthBuffer);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthBuffer);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 1024, 1024);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
 
 	// Via this.
 	glGenFramebuffersEXT(1, &frameBuffer);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE2D, 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);*/
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthBuffer);
+	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) OGLCONSOLE_Print("glCheckFramebufferStatusEXT failed!");
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
 }
 
-
-void drawScene()
+void drawTriangles() 
 {
-	// Attach our background framebuffer and render into it.
-
-
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	cam.GlMult();
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	glUseProgramObjectARB(0);
 
 	glBegin(GL_TRIANGLES);
@@ -90,7 +83,6 @@ void drawScene()
 		}
 
 	glEnd();
-	glFlush();
 
 	glUseProgramObjectARB(prog);
 
@@ -101,6 +93,69 @@ void drawScene()
 	glColor3f(0, 1, 1); glVertex3f(200, 110, 0);
 
 	glEnd();
+
+	glUseProgramObjectARB(0);
+}
+
+void drawScene()
+{
+	// Attach our background framebuffer and render into it.
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+    glViewport(0, 0, 1024,1024);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, 800, 0, 600, 0, 1);
+    
+	glMatrixMode(GL_MODELVIEW);
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+
+	// lol cornflower blue.
+	glClearColor(100/256.f,149/256.f,237/256.f, 1);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	drawTriangles();
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+	glViewport(0, 0, 800, 600);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(90, 800.0/600.0, 1, 10000);
+
+
+	glClearColor(0,0,0,0);
+
+	cam.GlMult();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	glGenerateMipmapEXT(GL_TEXTURE_2D);
+
+	glColor4d(1,1,1,1);
+
+	glBegin(GL_TRIANGLES);
+	glTexCoord2d(0, 0); glVertex3f(0.f,   0.f, -1.f); 
+	glTexCoord2d(1, 0); glVertex3f(800.f, 0.f, -1.f); 
+	glTexCoord2d(0, 1); glVertex3f(0.f,   600.f, -1.f); 
+
+	glTexCoord2d(1, 0); glVertex3f(800.f, 0.f, -1.f); 
+	glTexCoord2d(0, 1); glVertex3f(0.f,   600.f, -1.f); 
+	glTexCoord2d(1, 1); glVertex3f(800.f, 600.f, -1.f);
+
+	glEnd();
+
+	glFlush();
+
+	glDisable(GL_TEXTURE_2D);
+
+
 }
 
 void drawConsole()
@@ -111,7 +166,11 @@ void drawConsole()
 
 void cmdCb(OGLCONSOLE_Console console, char *cmd)
 {
-    if (!strncmp(cmd, "quit", 4)) done = TRUE;
+    if (!strncmp(cmd, "quit", 4)) 
+	{
+		done = TRUE;
+		return;
+	}
 
     /*else if (!strncmp(cmd, "add", 3))
     {
@@ -139,18 +198,12 @@ int main(int argc, char *argv[])
 
 	screen = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_OPENGL);
 	
-	glViewport(0, 0, 800, 600);
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0, 0, 0, 1);
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_COLOR_MATERIAL);
-
-
-	glMatrixMode(GL_PROJECTION);
-	//glOrtho(0, 800, 0, 600, 0, 1);
-	gluPerspective(90, 800.0/600.0, 1, 10000);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
