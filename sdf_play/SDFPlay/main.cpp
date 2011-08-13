@@ -77,7 +77,7 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
         return;
     }*/
     
-    OGLCONSOLE_Output(console, "I don't understand this command: %s\n", cmd);
+    OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
 }
 
 int main(int argc, char *argv[])
@@ -99,20 +99,21 @@ int main(int argc, char *argv[])
 
 
 	glMatrixMode(GL_PROJECTION);
-	glOrtho(0, 800, 0, 600, 0, 1);
+	//glOrtho(0, 800, 0, 600, 0, 1);
+	gluPerspective(90, 800.0/600.0, 1, 100);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	console = OGLCONSOLE_Create();
 	OGLCONSOLE_EnterKey(cmdCb);
-	OGLCONSOLE_Print("SDF PLAY V%s (LOL)\n", SDFPLAY_VERSION);
+	OGLCONSOLE_Print("SDF PLAY V%s\n", SDFPLAY_VERSION);
 
 	init_glsl();
 	glslSetErrorHandler(&theGlSlErrorHandler);
 
-	const GLcharARB *progVert = "varying vec4 vcol; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
-	const GLcharARB *progFrag = "varying vec4 vcol; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
+	const GLcharARB *progVert = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
+	const GLcharARB *progFrag = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
 	prog = createShaderFromProgs(progVert, progFrag);
 
     SDL_Event event;
