@@ -28,9 +28,45 @@ void APIENTRY theGlSlErrorHandler(GLcharARB *msg)
 	
 }
 
+GLuint textureId;
+GLenum frameBuffer;
+GLenum renderBuffer;
+
+void initGraphicsShit() 
+{
+	/*GLuint textureId;
+	glGenTextures(1, &textureId);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // automatic mipmap
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 800, 600, 0,
+				 GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+
+	// We'll render first time into this  background badboy.
+	glGenRenderbuffersEXT(1, &renderBuffer);
+	glBindRenderbufferEXT(renderBuffer);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA, 800, 600);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 800, 600);
+	glBindRenderbufferEXT(0);
+
+	// Via this.
+	glGenFramebuffersEXT(1, &frameBuffer);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE2D, 
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);*/
+}
+
 
 void drawScene()
 {
+	// Attach our background framebuffer and render into it.
+
+
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	cam.GlMult();
@@ -41,9 +77,17 @@ void drawScene()
 
 	glBegin(GL_TRIANGLES);
 
-	glColor3f(1, 0, 0); glVertex3f(10, 10, 0);
-	glColor3f(0, 1, 0); glVertex3f(10, 100, 0);
-	glColor3f(0, 0, 1); glVertex3f(100, 10, 0);
+	for(int i = 0; i < 10; i++) 
+		for(int j = 0; j < 10; j++) 
+		{
+			glColor3f(1.f, 0.f, 0.f); glVertex3f(i*10.f,         j*10.f,        0.f);
+			glColor3f(0.f, 1.f, 0.f); glVertex3f(i*10.f,         j*10.f + 10.f, 0.f);
+			glColor3f(0.f, 0.f, 1.f); glVertex3f(i*10.f + 10.f, j*10.f,         0.f);
+			
+			glColor3f(0.f, 1.f, 0.f); glVertex3f(i*10.f,         j*10.f + 10.f, 0.f);
+			glColor3f(1.f, 1.f, 1.f); glVertex3f(i*10.f + 10.f,  j*10.f + 10.f, 0.f);
+			glColor3f(0.f, 0.f, 1.f); glVertex3f(i*10.f + 10.f, j*10.f, 0.f);
+		}
 
 	glEnd();
 	glFlush();
@@ -121,6 +165,9 @@ int main(int argc, char *argv[])
 	glslSetErrorHandler(&theGlSlErrorHandler);
 	init_glsl();
 	init_glframebufferext();
+
+
+	initGraphicsShit();
 
 	
 
