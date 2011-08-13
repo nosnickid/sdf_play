@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\3rdparty\sdl-1.2.14\include;..\..\3rdparty\oglconsole"
+				AdditionalIncludeDirectories="..\..\3rdparty\sdl-1.2.14\include;..\..\3rdparty\oglconsole;..\..\common"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\common\FpsCamera.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\glsl.cpp"
 				>
 			</File>
@@ -198,6 +202,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\common\FpsCamera.h"
+				>
+			</File>
 			<File
 				RelativePath=".\glext.h"
 				>

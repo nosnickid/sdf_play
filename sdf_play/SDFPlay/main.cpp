@@ -6,6 +6,7 @@
 #include "SDL.h"
 #include "glsl.h"
 #include "oglconsole.h"
+#include "FpsCamera.h"
 
 #define SDFPLAY_VERSION "0.1 HEHE"
 
@@ -14,6 +15,8 @@ SDL_Surface *screen;
 OGLCONSOLE_Console console;
 
 GLhandleARB prog;
+
+FpsCamera cam;
 
 int done = 0;
 
@@ -29,6 +32,7 @@ void drawScene()
 {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	cam.GlMult();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -100,10 +104,13 @@ int main(int argc, char *argv[])
 
 	glMatrixMode(GL_PROJECTION);
 	//glOrtho(0, 800, 0, 600, 0, 1);
-	gluPerspective(90, 800.0/600.0, 1, 100);
+	gluPerspective(90, 800.0/600.0, 1, 10000);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	// hax
+	cam.InitHax(92, 100, 170, 0, 266);
 
 	console = OGLCONSOLE_Create();
 	OGLCONSOLE_EnterKey(cmdCb);
@@ -120,6 +127,14 @@ int main(int argc, char *argv[])
 
 	atexit(SDL_Quit);
 
+	SDL_WM_GrabInput(SDL_GRAB_ON);
+	SDL_ShowCursor(0);
+
+	Uint32 time = SDL_GetTicks();
+	Uint32 last = time;
+
+	GLfloat xvel = 0, yvel = 0;
+
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {
 			if (OGLCONSOLE_SDLEvent(&event) == 0) 
@@ -127,32 +142,54 @@ int main(int argc, char *argv[])
 				switch( event.type ) 
 				{
 					case SDL_MOUSEMOTION:
-						printf("Mouse moved by %d,%d to (%d,%d)\n", 
-							   event.motion.xrel, event.motion.yrel,
-							   event.motion.x, event.motion.y);
+						cam.RotateBy(event.motion.xrel, event.motion.yrel);
 						break;
 					case SDL_MOUSEBUTTONDOWN:
 						printf("Mouse button %d pressed at (%d,%d)\n",
 							   event.button.button, event.button.x, event.button.y);
 						break;
 					case SDL_KEYDOWN:
-						if (event.key.keysym.sym == SDLK_BACKQUOTE) 
+						switch(event.key.keysym.sym) 
 						{
-							OGLCONSOLE_SetVisibility(1);
-						}
-
-						if (event.key.keysym.sym == SDLK_ESCAPE) 
-						{
+						case SDLK_ESCAPE:
 							SDL_Event qe;
+							cam.InitHax(1,1,1,1,1);
 							qe.quit.type = SDL_QUIT;
 							SDL_PushEvent(&qe);
+							break;
+						case SDLK_h:  yvel = -50; break;
+						case SDLK_k:  yvel = 50; break;
+						case SDLK_u:  xvel = 50; break;
+						case SDLK_j:  xvel = -50; break;
+						default:
+							// ignore
+							break;
+						}
+						break;
+					case SDL_KEYUP:
+						switch(event.key.keysym.sym)
+						{
+						case SDLK_h:  yvel = 0; break;
+						case SDLK_k:  yvel = 0; break;
+						case SDLK_u:  xvel = 0; break;
+						case SDLK_j:  xvel = 0; break;
+						default: // not bovvvered. 
+							break;
 						}
 						break;
 					case SDL_QUIT:
 						done = 1;
 						break;
+					default:
+						break;
 				}
 			}
+		}
+		time = SDL_GetTicks();
+		if (time - last > 100) 
+		{
+			last = time;
+			cam.MoveOnRelXY(xvel / 10.0f, yvel / 10.0f);
 		}
 		drawScene();
 		drawConsole();
