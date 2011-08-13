@@ -5,10 +5,11 @@
 #include <gl/glu.h>
 #include "SDL.h"
 #include "glsl.h"
+#include "glframebufferext.h"
 #include "oglconsole.h"
 #include "FpsCamera.h"
 
-#define SDFPLAY_VERSION "0.1 HEHE"
+#define SDFPLAY_VERSION "0.2-glfbext"
 
 SDL_Surface *screen;
 
@@ -88,6 +89,7 @@ int main(int argc, char *argv[])
 {
     if ( SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {
         fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
+		fprintf(stderr, "Also some extra shit: %d %s", argc, argv[0]);
         return 0;
     }
 
@@ -116,8 +118,11 @@ int main(int argc, char *argv[])
 	OGLCONSOLE_EnterKey(cmdCb);
 	OGLCONSOLE_Print("SDF PLAY V%s\n", SDFPLAY_VERSION);
 
-	init_glsl();
 	glslSetErrorHandler(&theGlSlErrorHandler);
+	init_glsl();
+	init_glframebufferext();
+
+	
 
 	const GLcharARB *progVert = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	const GLcharARB *progFrag = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
