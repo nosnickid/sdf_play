@@ -7,6 +7,7 @@
 #include "glsl.h"
 #include "oglconsole.h"
 #include "FpsCamera.h"
+#include "Debug.h"
 
 #define SDFPLAY_VERSION "0.1 HEHE"
 
@@ -67,19 +68,6 @@ void drawConsole()
 void cmdCb(OGLCONSOLE_Console console, char *cmd)
 {
     if (!strncmp(cmd, "quit", 4)) done = TRUE;
-
-    /*else if (!strncmp(cmd, "add", 3))
-    {
-        int a, b;
-        if (sscanf(cmd, "add %i %i", &a, &b) == 2)
-        {
-            OGLCONSOLE_Output(console, "%i + %i = %i\n", a, b, a+b);
-            return;
-        }
-
-        OGLCONSOLE_Output(console, "usage: add INT INT\n");
-        return;
-    }*/
     
     OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
 }
@@ -87,7 +75,7 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 int main(int argc, char *argv[])
 {
     if ( SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {
-        fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
+        fatal("Unable to init SDL: %s\n", SDL_GetError());
         return 0;
     }
 
@@ -122,6 +110,8 @@ int main(int argc, char *argv[])
 	const GLcharARB *progVert = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	const GLcharARB *progFrag = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
 	prog = createShaderFromProgs(progVert, progFrag);
+	
+	debug("Welcoming you to the new logging world");
 
     SDL_Event event;
 

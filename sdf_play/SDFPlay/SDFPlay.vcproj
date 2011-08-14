@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\common\Debug.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\common\FpsCamera.cpp"
 				>
 			</File>
@@ -203,6 +207,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\common\Debug.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\common\FpsCamera.h"
 				>
 			</File>
@@ -216,6 +224,10 @@
 			</File>
 			<File
 				RelativePath="..\..\3rdparty\oglconsole\oglconsole.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sys.h"
 				>
 			</File>
 		</Filter>
