@@ -8,6 +8,7 @@
 #include "oglconsole.h"
 #include "FpsCamera.h"
 #include "Debug.h"
+#include "teapot.h"
 
 #define SDFPLAY_VERSION "0.1 HEHE"
 
@@ -57,6 +58,17 @@ void drawScene()
 	glColor3f(0, 1, 1); glVertex3f(200, 110, 0);
 
 	glEnd();
+
+	for(int i = 0; i < 5; i++) 
+	{
+		for(int j = 0; j < 5; j++) 
+		{
+			glPushMatrix();
+			glTranslatef(25 + i*5.f, 25 + j * 5.f, 10);
+			drawTeapot();
+			glPopMatrix();
+		}
+	}
 }
 
 void drawConsole()

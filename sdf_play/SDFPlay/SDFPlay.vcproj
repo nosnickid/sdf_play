@@ -230,6 +230,10 @@
 				RelativePath=".\Sys.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\common\teapot.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
