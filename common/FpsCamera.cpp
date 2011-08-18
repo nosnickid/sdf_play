@@ -1,4 +1,6 @@
 #include "FpsCamera.h"
+#include <iostream>
+#include <sstream>
 
 FpsCamera::FpsCamera()
 {
@@ -169,6 +171,13 @@ void FpsCamera::mult(GLfloat *C, GLfloat *A, GLfloat *B)
   C[1] = A[3]*B[1] - A[0]*B[2] + A[1]*B[3] + A[2]*B[0];
   C[2] = A[3]*B[2] + A[0]*B[1] - A[1]*B[0] + A[2]*B[3];
   C[3] = A[3]*B[3] - A[0]*B[0] - A[1]*B[1] - A[2]*B[2];
+}
+
+std::string FpsCamera::spam()
+{
+	std::stringstream result;
+	result << "P:" << this->pitch << "Y:" << this->yaw << "(x,y,z): (" << pos[0] << "," << pos[1] << "," << pos[2] << ")" << std::endl;
+	return result.str();
 }
 
 

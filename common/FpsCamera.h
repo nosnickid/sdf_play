@@ -4,6 +4,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <math.h>
+#include <string>
 
 class FpsCamera 
 {
@@ -48,4 +49,6 @@ public:
 	 * Init some values directly into the camera. Because you broke point and found some nice ones.
 	 */
 	void InitHax(GLfloat x, GLfloat y, GLfloat z, GLfloat pitch, GLfloat yaw);
+
+	std::string spam();
 };

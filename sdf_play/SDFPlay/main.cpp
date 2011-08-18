@@ -20,6 +20,7 @@ OGLCONSOLE_Console console;
 GLhandleARB prog;
 
 FpsCamera cam;
+FpsCamera lightPosition;
 
 int done = 0;
 
@@ -70,7 +71,13 @@ void drawTriangles()
 {
 	glUseProgramObjectARB(0);
 
+	glColor4f(1.f, 0, 0, 1);
 	glBegin(GL_TRIANGLES);
+	glVertex3f(0.f,   0.f, -0.f);    glVertex3f(100.f, 0.f, 0.f);     glVertex3f(0.f,   100.f, -0.f); 
+	glVertex3f(100.f, 0.f, -0.f);    glVertex3f(0.f,   100.f, 0.f);   glVertex3f(100.f, 100.f, -0.f);
+	glEnd();
+
+	/*glBegin(GL_TRIANGLES);
 
 	for(int i = 0; i < 10; i++) 
 		for(int j = 0; j < 10; j++) 
@@ -84,7 +91,7 @@ void drawTriangles()
 			glColor3f(0.f, 0.f, 1.f); glVertex3f(i*10.f + 10.f, j*10.f, 0.f);
 		}
 
-	glEnd();
+	glEnd();*/
 
 	glUseProgramObjectARB(prog);
 
@@ -96,17 +103,19 @@ void drawTriangles()
 
 	glEnd();
 
+	glUseProgramObjectARB(0);
+
 	for(int i = 0; i < 5; i++) 
 	{
 		for(int j = 0; j < 5; j++) 
 		{
 			glPushMatrix();
-			glTranslatef(25 + i*5.f, 25 + j * 5.f, 10);
+			glScalef(1.5f, 1.5f, 1.5f);
+			glTranslatef(25 + i*5.f, 25 + j * 5.f, 50);
 			drawTeapot();
 			glPopMatrix();
 		}
 	}
-	glUseProgramObjectARB(0);
 }
 
 void drawScene()
@@ -115,11 +124,12 @@ void drawScene()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	lightPosition.GlMult();
 
     glViewport(0, 0, 1024,1024);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, 800, 0, 600, 0, 1);
+    gluPerspective(90, 800.0/600.0, 1, 10000);
     
 	glMatrixMode(GL_MODELVIEW);
 
@@ -138,11 +148,11 @@ void drawScene()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(90, 800.0/600.0, 1, 10000);
-
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	cam.GlMult();
 
 	glClearColor(0,0,0,0);
-
-	cam.GlMult();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -152,8 +162,21 @@ void drawScene()
 
 	glColor4d(1,1,1,1);
 
+	glBegin(GL_TRIANGLES);
+
+	glTexCoord2d(0, 0); glVertex3f(0.f,   0.f, -1.f);    
+	glTexCoord2d(1, 0); glVertex3f(400.f, 0.f, -1.f);    
+	glTexCoord2d(0, 1); glVertex3f(0.f,   300.f, -1.f);  
+	                                                      
+	glTexCoord2d(1, 0); glVertex3f(400.f, 0.f, -1.f);    
+	glTexCoord2d(0, 1); glVertex3f(0.f,   300.f, -1.f);  
+	glTexCoord2d(1, 1); glVertex3f(400.f, 300.f, -1.f);  
+
+	glEnd();
+
 	glDisable(GL_TEXTURE_2D);
 
+	drawTriangles();
 
 }
 
@@ -171,13 +194,18 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 		return;
 	}
 
+	if (!strncmp(cmd, "camspam", 7))
+	{
+		OGLCONSOLE_Output(console, "camera: %s\n", cam.spam().c_str());
+	}
+
     OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
 }
 
 int main(int argc, char *argv[])
 {
     if ( SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {
-        fatal("Unable to init SDL: %s\n", SDL_GetError());
+        fatal("Unable to init SDL: %s %d %d\n", SDL_GetError(), argc, argv);
         return 0;
     }
 
@@ -195,6 +223,7 @@ int main(int argc, char *argv[])
 
 	// hax
 	cam.InitHax(92, 100, 170, 0, 266);
+	lightPosition.InitHax(75, 70, 125, -7, 261);
 
 	console = OGLCONSOLE_Create();
 	OGLCONSOLE_EnterKey(cmdCb);
@@ -204,10 +233,7 @@ int main(int argc, char *argv[])
 	init_glsl();
 	init_glframebufferext();
 
-
 	initGraphicsShit();
-
-	
 
 	const GLcharARB *progVert = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	const GLcharARB *progFrag = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
