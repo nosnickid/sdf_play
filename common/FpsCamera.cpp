@@ -43,8 +43,8 @@ const GLfloat *FpsCamera::GetLookVec()
 	if (viewvars[0] != pitch || viewvars[1] != yaw)
 	{
 		GLfloat s, c, norm[4], rotq[4], tmp[4];
-		c = cos(3.14159f*yaw/180.0);
-		s = sin(3.14159f*yaw/180.0);
+		c = cos(3.14159f*yaw/180.0f);
+		s = sin(3.14159f*yaw/180.0f);
 		// shortcircuit all teh calculations :))
 		view[0] = c;
 		view[1] = 0;

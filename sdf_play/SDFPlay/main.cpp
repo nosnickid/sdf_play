@@ -5,12 +5,13 @@
 #include <gl/glu.h>
 #include "SDL.h"
 #include "glsl.h"
+#include "glframebufferext.h"
 #include "oglconsole.h"
 #include "FpsCamera.h"
 #include "Debug.h"
 #include "teapot.h"
 
-#define SDFPLAY_VERSION "0.1 HEHE"
+#define SDFPLAY_VERSION "0.2-glfbext"
 
 SDL_Surface *screen;
 
@@ -29,25 +30,61 @@ void APIENTRY theGlSlErrorHandler(GLcharARB *msg)
 	
 }
 
+GLenum frameBuffer;
+GLuint textureId;
+GLenum depthBuffer;
 
-void drawScene()
+void initGraphicsShit() 
 {
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	cam.GlMult();
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &textureId);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // automatic mipmap
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
+	// We want a temp depth buffer please.
+	glGenRenderbuffersEXT(1, &depthBuffer);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthBuffer);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 1024, 1024);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+	// Via this.
+	glGenFramebuffersEXT(1, &frameBuffer);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthBuffer);
+	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) OGLCONSOLE_Print("glCheckFramebufferStatusEXT failed!");
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+}
+
+void drawTriangles() 
+{
 	glUseProgramObjectARB(0);
 
 	glBegin(GL_TRIANGLES);
 
-	glColor3f(1, 0, 0); glVertex3f(10, 10, 0);
-	glColor3f(0, 1, 0); glVertex3f(10, 100, 0);
-	glColor3f(0, 0, 1); glVertex3f(100, 10, 0);
+	for(int i = 0; i < 10; i++) 
+		for(int j = 0; j < 10; j++) 
+		{
+			glColor3f(1.f, 0.f, 0.f); glVertex3f(i*10.f,         j*10.f,        0.f);
+			glColor3f(0.f, 1.f, 0.f); glVertex3f(i*10.f,         j*10.f + 10.f, 0.f);
+			glColor3f(0.f, 0.f, 1.f); glVertex3f(i*10.f + 10.f, j*10.f,         0.f);
+			
+			glColor3f(0.f, 1.f, 0.f); glVertex3f(i*10.f,         j*10.f + 10.f, 0.f);
+			glColor3f(1.f, 1.f, 1.f); glVertex3f(i*10.f + 10.f,  j*10.f + 10.f, 0.f);
+			glColor3f(0.f, 0.f, 1.f); glVertex3f(i*10.f + 10.f, j*10.f, 0.f);
+		}
 
 	glEnd();
-	glFlush();
 
 	glUseProgramObjectARB(prog);
 
@@ -69,6 +106,55 @@ void drawScene()
 			glPopMatrix();
 		}
 	}
+	glUseProgramObjectARB(0);
+}
+
+void drawScene()
+{
+	// Attach our background framebuffer and render into it.
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+    glViewport(0, 0, 1024,1024);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, 800, 0, 600, 0, 1);
+    
+	glMatrixMode(GL_MODELVIEW);
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+
+	// lol cornflower blue.
+	glClearColor(100/256.f,149/256.f,237/256.f, 1);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	drawTriangles();
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+	glViewport(0, 0, 800, 600);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(90, 800.0/600.0, 1, 10000);
+
+
+	glClearColor(0,0,0,0);
+
+	cam.GlMult();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	glGenerateMipmapEXT(GL_TEXTURE_2D);
+
+	glColor4d(1,1,1,1);
+
+	glDisable(GL_TEXTURE_2D);
+
+
 }
 
 void drawConsole()
@@ -79,8 +165,12 @@ void drawConsole()
 
 void cmdCb(OGLCONSOLE_Console console, char *cmd)
 {
-    if (!strncmp(cmd, "quit", 4)) done = TRUE;
-    
+    if (!strncmp(cmd, "quit", 4)) 
+	{
+		done = TRUE;
+		return;
+	}
+
     OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
 }
 
@@ -93,18 +183,12 @@ int main(int argc, char *argv[])
 
 	screen = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_OPENGL);
 	
-	glViewport(0, 0, 800, 600);
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0, 0, 0, 1);
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_COLOR_MATERIAL);
-
-
-	glMatrixMode(GL_PROJECTION);
-	//glOrtho(0, 800, 0, 600, 0, 1);
-	gluPerspective(90, 800.0/600.0, 1, 10000);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -116,8 +200,14 @@ int main(int argc, char *argv[])
 	OGLCONSOLE_EnterKey(cmdCb);
 	OGLCONSOLE_Print("SDF PLAY V%s\n", SDFPLAY_VERSION);
 
-	init_glsl();
 	glslSetErrorHandler(&theGlSlErrorHandler);
+	init_glsl();
+	init_glframebufferext();
+
+
+	initGraphicsShit();
+
+	
 
 	const GLcharARB *progVert = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	const GLcharARB *progFrag = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";

@@ -42,12 +42,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\3rdparty\sdl-1.2.14\include;..\..\3rdparty\oglconsole;..\..\common"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
+				WarnAsError="true"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -197,6 +198,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\sdl_glframebufferext.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\win32_glsl.cpp"
 				>
 			</File>
@@ -216,6 +221,10 @@
 			</File>
 			<File
 				RelativePath=".\glext.h"
+				>
+			</File>
+			<File
+				RelativePath=".\glframebufferext.h"
 				>
 			</File>
 			<File

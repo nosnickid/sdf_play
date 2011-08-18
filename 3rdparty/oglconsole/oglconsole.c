@@ -794,7 +794,7 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
                 *d = *(d-1);
 
             /* Insert new character */
-            *c = k;
+            *c = (char)k;
 
             /* Increment input line length counter */
             userConsole->inputLineLength++;
