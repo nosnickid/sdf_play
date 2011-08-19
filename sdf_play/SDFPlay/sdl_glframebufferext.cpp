@@ -1,7 +1,5 @@
 #include "glframebufferext.h"
 
-#include <SDL.h>
-
 PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT = NULL;
 PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT = NULL;
 PFNGLGENRENDERBUFFERSEXTPROC glGenRenderbuffersEXT = NULL;

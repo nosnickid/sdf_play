@@ -44,4 +44,11 @@ _ReSharper*/
 # Office Temp Files
 ~$*
 
+
+# Linux build things
+*.o
+
+# sdfplay stuff
 3rdparty/SDL-1.2.14/docs
+3rdparty/oglconsole/liboglconsole.a
+play

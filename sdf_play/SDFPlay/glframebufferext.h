@@ -1,14 +1,7 @@
 #ifndef SDFPLAY_GLEXTFRAMEBUFFER_H_
 #define SDFPLAY_GLEXTFRAMEBUFFER_H_
 
-#ifdef _WIN32
-#include <windows.h>
-
-#ifndef APIENTRYP 
-#define APIENTRYP APIENTRY *
-#endif
-
-#endif
+#include "Sys.h"
 
 #include <GL/gl.h>
 #include <GL/glu.h>

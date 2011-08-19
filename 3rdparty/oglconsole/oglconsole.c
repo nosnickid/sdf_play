@@ -8,8 +8,12 @@
 #  ifdef __MACH__
 #    include <OpenGL/gl.h>
 #  else
-#    include <windows.h>
-#    include <GL/gl.h>
+#    ifdef WIN32
+#      include <windows.h>
+#      include <GL/gl.h>
+#    else
+#      include <GL/gl.h>
+#    endif
 #  endif
 #endif
 
@@ -626,7 +630,7 @@ void OGLCONSOLE_Output(OGLCONSOLE_Console console, const char *s, ...)
 
 /* Mono-Console Users: print text to the console; multi-console users use
  * Output() */
-void OGLCONSOLE_Print(char *s, ...)
+void OGLCONSOLE_Print(const char *s, ...)
 {
     va_list argument;
     char output[4096];

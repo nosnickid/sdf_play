@@ -1,6 +1,5 @@
 #pragma once
 
-#include <SDL.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -26,11 +25,11 @@ public:
 #define va_pass(valist) CVaPassNext(valist).svapassnext
 
 
-void fatal(char *fmt, ...);
-void warning(char *fmt, ...);
-void info(char *fmt, ...);
-void debug(char *fmt, ...);
+void fatal(const char *fmt, ...);
+void warning(const char *fmt, ...);
+void info(const char *fmt, ...);
+void debug(const char *fmt, ...);
 
-void assERT(bool condition, char *fmt, ...);
+void assERT(bool condition, const char *fmt, ...);
 
 

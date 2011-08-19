@@ -2,11 +2,11 @@
 
 #include "Sys.h"
 
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include "oglconsole.h"
 
 
-void fatal(char *msg, ...) 
+void fatal(const char *msg, ...) 
 {
 	va_list list;
 	va_start(list, msg);
@@ -24,7 +24,7 @@ void fatal(char *msg, ...)
 #endif
 }
 
-void warning(char *fmt, ...)
+void warning(const char *fmt, ...)
 {
 	va_list list;
 	va_start(list, fmt);
@@ -34,7 +34,7 @@ void warning(char *fmt, ...)
 	va_end(list);
 }
 
-void info(char *fmt, ...)
+void info(const char *fmt, ...)
 {
 	va_list list;
 	va_start(list, fmt);
@@ -43,7 +43,7 @@ void info(char *fmt, ...)
 	va_end(list);
 }
 
-void debug(char *fmt, ...)
+void debug(const char *fmt, ...)
 {
 	va_list list;
 	va_start(list, fmt);
@@ -52,7 +52,7 @@ void debug(char *fmt, ...)
 	va_end(list);
 }
 
-void assERT(bool condition, char *fmt, ...)
+void assERT(bool condition, const char *fmt, ...)
 {
 	va_list list;
 	if (!condition)

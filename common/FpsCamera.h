@@ -1,10 +1,8 @@
 #pragma once
 
-#include <windows.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <math.h>
 #include <string>
+#include "Sys.h"
 
 class FpsCamera 
 {

@@ -1,9 +1,5 @@
 #include <stdlib.h>
-#define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
-#include <gl/gl.h>
-#include <gl/glu.h>
-#include "SDL.h"
+#include "Sys.h"
 #include "glsl.h"
 #include "glframebufferext.h"
 #include "oglconsole.h"
@@ -190,7 +186,7 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 {
     if (!strncmp(cmd, "quit", 4)) 
 	{
-		done = TRUE;
+		done = true; 
 		return;
 	}
 
