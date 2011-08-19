@@ -15,7 +15,7 @@ OGLCONSOLE_Console console;
 
 GLhandleARB prog;
 
-FpsCamera cam;
+FpsCamera viewCam;
 FpsCamera lightPosition;
 
 int done = 0;
@@ -146,7 +146,7 @@ void drawScene()
 	gluPerspective(90, 800.0/600.0, 1, 10000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	cam.GlMult();
+	viewCam.GlMult();
 
 	glClearColor(0,0,0,0);
 
@@ -190,9 +190,9 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 		return;
 	}
 
-	if (!strncmp(cmd, "camspam", 7))
+	if (!strncmp(cmd, "viewCamspam", 7))
 	{
-		OGLCONSOLE_Output(console, "camera: %s\n", cam.spam().c_str());
+		OGLCONSOLE_Output(console, "viewCamera: %s\n", viewCam.spam().c_str());
 	}
 
     OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
 	glLoadIdentity();
 
 	// hax
-	cam.InitHax(92, 100, 170, 0, 266);
+	viewCam.InitHax(92, 100, 170, 0, 266);
 	lightPosition.InitHax(75, 70, 125, -7, 261);
 
 	console = OGLCONSOLE_Create();
@@ -248,6 +248,8 @@ int main(int argc, char *argv[])
 	Uint32 last = time;
 
 	GLfloat xvel = 0, yvel = 0;
+   
+    FpsCamera *activeCam = &viewCam;
 
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {
@@ -256,7 +258,7 @@ int main(int argc, char *argv[])
 				switch( event.type ) 
 				{
 					case SDL_MOUSEMOTION:
-						cam.RotateBy(event.motion.xrel, event.motion.yrel);
+						activeCam->RotateBy(event.motion.xrel, event.motion.yrel);
 						break;
 					case SDL_MOUSEBUTTONDOWN:
 						printf("Mouse button %d pressed at (%d,%d)\n",
@@ -267,7 +269,7 @@ int main(int argc, char *argv[])
 						{
 						case SDLK_ESCAPE:
 							SDL_Event qe;
-							cam.InitHax(1,1,1,1,1);
+							viewCam.InitHax(1,1,1,1,1);
 							qe.quit.type = SDL_QUIT;
 							SDL_PushEvent(&qe);
 							break;
@@ -275,6 +277,8 @@ int main(int argc, char *argv[])
 						case SDLK_k:  yvel = 50; break;
 						case SDLK_u:  xvel = 50; break;
 						case SDLK_j:  xvel = -50; break;
+                        case SDLK_y:  if (activeCam == &viewCam) { activeCam = &lightPosition; } else { activeCam = &viewCam; } 
+                            break;
 						default:
 							// ignore
 							break;
@@ -303,7 +307,7 @@ int main(int argc, char *argv[])
 		if (time - last > 100) 
 		{
 			last = time;
-			cam.MoveOnRelXY(xvel / 10.0f, yvel / 10.0f);
+			activeCam->MoveOnRelXY(xvel / 10.0f, yvel / 10.0f);
 		}
 		drawScene();
 		drawConsole();
