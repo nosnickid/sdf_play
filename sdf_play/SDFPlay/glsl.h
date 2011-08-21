@@ -24,6 +24,9 @@ extern PFNGLLINKPROGRAMARBPROC glLinkProgramARB;
 extern PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB;
 extern PFNGLGETINFOLOGARBPROC glGetInfoLogARB;
 
+// not really GLSL, fuck it.
+extern PFNGLACTIVETEXTUREARBPROC glActiveTextureARB;
+
 typedef void (APIENTRYP PFNGLSLERRORHANDLER) (GLcharARB *message);
 
 void init_glsl();

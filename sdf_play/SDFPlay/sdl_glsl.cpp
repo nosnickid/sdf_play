@@ -11,6 +11,9 @@ PFNGLLINKPROGRAMARBPROC glLinkProgramARB = NULL;
 PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB = NULL;
 PFNGLGETINFOLOGARBPROC glGetInfoLogARB = NULL;
 
+// not really glsl?
+PFNGLACTIVETEXTUREARBPROC glActiveTextureARB = NULL;
+
 void init_glsl()
 {
 	glCreateProgramObjectARB = (PFNGLCREATEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glCreateProgramObjectARB");
@@ -22,4 +25,5 @@ void init_glsl()
 	glLinkProgramARB = (PFNGLLINKPROGRAMARBPROC)SDL_GL_GetProcAddress("glLinkProgramARB");
 	glGetObjectParameterivARB = (PFNGLGETOBJECTPARAMETERIVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterivARB");
 	glGetInfoLogARB = (PFNGLGETINFOLOGARBPROC)SDL_GL_GetProcAddress("glGetInfoLogARB");
+	glActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC) SDL_GL_GetProcAddress("glActiveTextureARB");
 }

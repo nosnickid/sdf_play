@@ -30,7 +30,7 @@ void APIENTRY theGlSlErrorHandler(GLcharARB *msg)
 
 GLenum frameBuffer;
 GLuint textureId;
-GLenum depthBuffer;
+GLuint depthBuffer;
 
 void initGraphicsShit() 
 {
@@ -47,16 +47,20 @@ void initGraphicsShit()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// We want a temp depth buffer please.
-	glGenRenderbuffersEXT(1, &depthBuffer);
-	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthBuffer);
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 1024, 1024);
-	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+	glGenTextures(1, &depthBuffer);
+	glBindTexture(GL_TEXTURE_2D, depthBuffer);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 
 	// Via this.
 	glGenFramebuffersEXT(1, &frameBuffer);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
-	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthBuffer);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthBuffer, 0);
+	//glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthBuffer);
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) OGLCONSOLE_Print("glCheckFramebufferStatusEXT failed!");
 
@@ -154,7 +158,7 @@ void drawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	glBindTexture(GL_TEXTURE_2D, depthBuffer);
 	glGenerateMipmapEXT(GL_TEXTURE_2D);
 
 	glColor4d(1,1,1,1);
@@ -194,6 +198,7 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 	if (!strncmp(cmd, "camspam", 7))
 	{
 		OGLCONSOLE_Output(console, "camspam: %s\n", activeCam->spam().c_str());
+		return;
 	}
 
     OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
