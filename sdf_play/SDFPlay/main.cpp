@@ -17,6 +17,7 @@ GLhandleARB prog;
 
 FpsCamera viewCam;
 FpsCamera lightPosition;
+FpsCamera *activeCam = &viewCam;
 
 int done = 0;
 
@@ -190,9 +191,9 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 		return;
 	}
 
-	if (!strncmp(cmd, "viewCamspam", 7))
+	if (!strncmp(cmd, "camspam", 7))
 	{
-		OGLCONSOLE_Output(console, "viewCamera: %s\n", viewCam.spam().c_str());
+		OGLCONSOLE_Output(console, "camspam: %s\n", activeCam->spam().c_str());
 	}
 
     OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
@@ -249,8 +250,6 @@ int main(int argc, char *argv[])
 
 	GLfloat xvel = 0, yvel = 0;
    
-    FpsCamera *activeCam = &viewCam;
-
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {
 			if (OGLCONSOLE_SDLEvent(&event) == 0) 

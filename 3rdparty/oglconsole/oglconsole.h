@@ -32,7 +32,11 @@ void OGLCONSOLE_EnterKey(void(*cbfun)(OGLCONSOLE_Console console, char *cmd));
  * be non-SDL analogs for input systems such as GLUT. Returns true if the event
  * was handled by the console. If console is hidden, no events are handled. */
 #if defined(OGLCONSOLE_USE_SDL)
+#ifdef _WIN32
+#include "SDL.h"
+#else
 #include "SDL/SDL.h"
+#endif
 int OGLCONSOLE_SDLEvent(SDL_Event * e);
 #endif
 

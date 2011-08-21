@@ -2,7 +2,6 @@
 
 #include "Sys.h"
 
-#include <SDL/SDL.h>
 #include "oglconsole.h"
 
 

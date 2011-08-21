@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\3rdparty\sdl-1.2.14\include;..\..\3rdparty\oglconsole;..\..\common"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;OGLCONSOLE_USE_SDL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -202,7 +202,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\win32_glsl.cpp"
+				RelativePath=".\sdl_glsl.cpp"
 				>
 			</File>
 		</Filter>
