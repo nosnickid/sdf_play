@@ -86,6 +86,8 @@ void drawScene()
 	drawTriangles(false);
 	spotlight->RenderDone();
 
+    checkOpenGL("render shadow depth");
+
 	// draw the straight light texture ortho so we can easily debug it
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -104,6 +106,8 @@ void drawScene()
 	glTexCoord2d(0, 1); glVertex2d(0, 200);
 	glEnd();
 
+    checkOpenGL("render depth preview");
+
 	// and render the scene as we actually see it.
 
 	glMatrixMode(GL_PROJECTION);
@@ -114,6 +118,8 @@ void drawScene()
 	viewCam.GlMult();
 
 	drawTriangles(true);
+
+    checkOpenGL("render scene nicely");
 
 }
 
@@ -165,9 +171,12 @@ int main(int argc, char *argv[])
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_TEXTURE_2D);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+    checkOpenGL("init");
 
 	console = OGLCONSOLE_Create();
 	OGLCONSOLE_EnterKey(cmdCb);
@@ -176,6 +185,8 @@ int main(int argc, char *argv[])
 	glslSetErrorHandler(&theGlSlErrorHandler);
 	init_glsl();
 	init_glframebufferext();
+
+    checkOpenGL("bindings");
 
 	const GLcharARB *progVert = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	const GLcharARB *progFrag = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
@@ -187,20 +198,23 @@ int main(int argc, char *argv[])
 
 	const GLcharARB *sprogVert = "varying vec4 vertCol; varying vec4 lightTexPos; uniform mat4 lightMat; uniform mat4 biaser; \
 		void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; gl_Position = gl_ProjectionMatrix * lightMat * gl_Vertex; vertCol = gl_Color; }";
-	const GLcharARB *sprogFrag = "\
+/*	const GLcharARB *sprogFrag = "\
 		 varying vec4 vertCol; varying vec4 lightTexPos; \
 		 void main() { \
-		 if (lightTexPos[0] >= -1 && lightTexPos[0] <= 1 && lightTexPos[1] >= -1 && lightTexPos[1] <= 1) { \
+		 if ((lightTexPos[0] >= -1) && (lightTexPos[0] <= 1) && (lightTexPos[1] >= -1) && (lightTexPos[1] <= 1)) { \
 		    gl_FragColor = vertCol; \
 		 } else \
 			gl_FragColor = vec4(0.5,1,1,1); \
-		 }";
+		 }";*/
+    const GLcharARB *sprogFrag = "varying vec4 vertCol; varying vec4 lightTexPos; void main() { gl_FragColor = vertCol; } ";
 	shadowProg = createShaderFromProgs(sprogVert, sprogFrag);
 	gslLightUniform = glGetUniformLocationARB(shadowProg, "lightMat");
 
 	GLenum biaser = glGetUniformLocationARB(shadowProg, "biaser");
 	GLfloat bias[] = { 0.5f, 0, 0, 0.5f,     0, 0.5f, 0, 0.5f,    0, 0, 0.5f, 0.5f,     0, 0, 0, 1 };
 	glUniformMatrix4fvARB(biaser, 1, false, bias);
+
+    checkOpenGL("prog");
 
 
 	// hax
@@ -251,6 +265,7 @@ int main(int argc, char *argv[])
 						case SDLK_j:  xvel = -50; break;
                         case SDLK_y:  if (activeCam == &viewCam) { activeCam = &spotlight->position; } else { activeCam = &viewCam; } 
                             break;
+                        case SDLK_i: OGLCONSOLE_SetVisibility(1); break;
 						default:
 							// ignore
 							break;

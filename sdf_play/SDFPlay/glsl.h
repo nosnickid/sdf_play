@@ -27,7 +27,9 @@ extern PFNGLGETUNIFORMLOCATIONARBPROC glGetUniformLocationARB;
 extern PFNGLUNIFORMMATRIX4FVARBPROC glUniformMatrix4fvARB;
 
 // not really GLSL, fuck it.
+#ifdef _WIN32
 extern PFNGLACTIVETEXTUREARBPROC glActiveTextureARB;
+#endif
 
 typedef void (APIENTRYP PFNGLSLERRORHANDLER) (GLcharARB *message);
 

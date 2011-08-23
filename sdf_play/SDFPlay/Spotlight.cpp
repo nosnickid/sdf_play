@@ -16,8 +16,11 @@ Spotlight::Spotlight()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);*/
 
+    glGetError();
+
 	// We want a temp depth buffer please.
 	glGenTextures(1, &this->depthBuffer);
+    if (int i = glGetError() != GL_NO_ERROR) { warning("Depth buffer fail: %x\n", i); }
 	glBindTexture(GL_TEXTURE_2D, this->depthBuffer);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

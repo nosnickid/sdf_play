@@ -12,8 +12,10 @@ PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB = NULL;
 PFNGLGETINFOLOGARBPROC glGetInfoLogARB = NULL;
 PFNGLGETUNIFORMLOCATIONARBPROC glGetUniformLocationARB = NULL;
 PFNGLUNIFORMMATRIX4FVARBPROC glUniformMatrix4fvARB = NULL;
+#ifdef _WIN32
 // not really glsl?
 PFNGLACTIVETEXTUREARBPROC glActiveTextureARB = NULL;
+#endif
 
 void init_glsl()
 {
@@ -26,7 +28,9 @@ void init_glsl()
 	glLinkProgramARB = (PFNGLLINKPROGRAMARBPROC)SDL_GL_GetProcAddress("glLinkProgramARB");
 	glGetObjectParameterivARB = (PFNGLGETOBJECTPARAMETERIVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterivARB");
 	glGetInfoLogARB = (PFNGLGETINFOLOGARBPROC)SDL_GL_GetProcAddress("glGetInfoLogARB");
-	glActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC) SDL_GL_GetProcAddress("glActiveTextureARB");
 	glGetUniformLocationARB = (PFNGLGETUNIFORMLOCATIONARBPROC) SDL_GL_GetProcAddress("glGetUniformLocationARB");
 	glUniformMatrix4fvARB = (PFNGLUNIFORMMATRIX4FVARBPROC) SDL_GL_GetProcAddress("glUniformMatrix4fvARB");
+#ifdef _WIN32
+	glActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC) SDL_GL_GetProcAddress("glActiveTextureARB");
+#endif
 }

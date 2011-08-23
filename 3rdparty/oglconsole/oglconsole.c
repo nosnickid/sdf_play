@@ -723,7 +723,8 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
     /* If the terminal is hidden we only check for show/hide key */
     if (userConsole->visibility < 1)
     {
-        if (e->type == SDL_KEYDOWN && e->key.keysym.sym == '`')
+        OGLCONSOLE_Print("%d", e->key.keysym.sym);
+        if (e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_BACKQUOTE)
         {  
             // TODO: Fetch values from OS?
             // TODO: Expose them to the program
@@ -742,7 +743,7 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
 		if (e->key.keysym.mod & ~(KMOD_CAPITALIZE|KMOD_NUM)) return 0;
 
         /* Check for hide key */
-        if (e->key.keysym.sym == '`')
+        if (e->key.keysym.sym == SDLK_BACKQUOTE) 
         {
             /* Tell console to slide into closing */
             userConsole->visibility -= SLIDE_STEPS;

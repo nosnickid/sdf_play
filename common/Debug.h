@@ -5,7 +5,7 @@
 #include <string.h>
 #include "oglconsole.h"
 
-template<char count>
+/*template<char count>
 struct SVaPassNext{
     SVaPassNext<count-1> big;
     unsigned long dw;
@@ -22,13 +22,23 @@ public:
 		} catch (...) {}
     }
 };
-#define va_pass(valist) CVaPassNext(valist).svapassnext
+HASHdefine va_pass(valist) CVaPassNext(valist).svapassnext
+*/
 
 
 void fatal(const char *fmt, ...);
 void warning(const char *fmt, ...);
 void info(const char *fmt, ...);
 void debug(const char *fmt, ...);
+void checkOpenGL(const char *);
+void checkOpenGL();
+
+
+void fatal(const char *fmt, va_list varg);
+void warning(const char *fmt, va_list varg);
+void info(const char *fmt, va_list varg);
+void debug(const char *fmt, va_list varg);
+
 
 void assERT(bool condition, const char *fmt, ...);
 

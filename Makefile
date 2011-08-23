@@ -1,6 +1,6 @@
 default: all
 
-SOURCES=common/Debug.cpp common/FpsCamera.cpp sdf_play/SDFPlay/glsl.cpp  sdf_play/SDFPlay/main.cpp  sdf_play/SDFPlay/sdl_glframebufferext.cpp  sdf_play/SDFPlay/sdl_glsl.cpp  
+SOURCES=common/Debug.cpp common/FpsCamera.cpp sdf_play/SDFPlay/glsl.cpp  sdf_play/SDFPlay/main.cpp  sdf_play/SDFPlay/sdl_glframebufferext.cpp  sdf_play/SDFPlay/sdl_glsl.cpp sdf_play/SDFPlay/Spotlight.cpp 
 OBJECTS=$(SOURCES:.cpp=.o)
 
 INCLUDE=-I3rdparty/include -Icommon -I3rdparty/include/linux 
