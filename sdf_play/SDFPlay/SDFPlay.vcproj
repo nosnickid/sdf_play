@@ -205,6 +205,10 @@
 				RelativePath=".\sdl_glsl.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Spotlight.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -233,6 +237,10 @@
 			</File>
 			<File
 				RelativePath="..\..\3rdparty\oglconsole\oglconsole.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Spotlight.h"
 				>
 			</File>
 			<File

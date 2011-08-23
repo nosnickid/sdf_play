@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "Sys.h"
 #include "glsl.h"
+#include "Spotlight.h"
 #include "glframebufferext.h"
 #include "oglconsole.h"
 #include "FpsCamera.h"
@@ -14,10 +15,13 @@ SDL_Surface *screen;
 OGLCONSOLE_Console console;
 
 GLhandleARB prog;
+GLhandleARB textureProg;
+GLhandleARB shadowProg;
 
+Spotlight *spotlight;
 FpsCamera viewCam;
-FpsCamera lightPosition;
 FpsCamera *activeCam = &viewCam;
+GLenum gslLightUniform = 0;
 
 int done = 0;
 
@@ -28,73 +32,30 @@ void APIENTRY theGlSlErrorHandler(GLcharARB *msg)
 	
 }
 
-GLenum frameBuffer;
-GLuint textureId;
-GLuint depthBuffer;
 
-void initGraphicsShit() 
+
+
+void drawTriangles(bool isLit)
 {
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // automatic mipmap
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	// We want a temp depth buffer please.
-	glGenTextures(1, &depthBuffer);
-	glBindTexture(GL_TEXTURE_2D, depthBuffer);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
-
-	// Via this.
-	glGenFramebuffersEXT(1, &frameBuffer);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthBuffer, 0);
-	//glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthBuffer);
-	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) OGLCONSOLE_Print("glCheckFramebufferStatusEXT failed!");
-
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-}
-
-void drawTriangles() 
-{
-	glUseProgramObjectARB(0);
+	if (isLit) {
+		GLfloat* lightMat = spotlight->GetLightMatrix();
+		glUseProgramObjectARB(shadowProg);
+		glUniformMatrix4fvARB(gslLightUniform, 1, false, lightMat);
+	} else {
+		glUseProgramObjectARB(0);
+	}
 
 	glColor4f(1.f, 0, 0, 1);
 	glBegin(GL_TRIANGLES);
-	glVertex3f(0.f,   0.f, -0.f);    glVertex3f(100.f, 0.f, 0.f);     glVertex3f(0.f,   100.f, -0.f); 
-	glVertex3f(100.f, 0.f, -0.f);    glVertex3f(0.f,   100.f, 0.f);   glVertex3f(100.f, 100.f, -0.f);
+	glVertex3f(0.f,   0.f, -0.f);    
+	glVertex3f(100.f, 0.f, 0.f);     
+	glVertex3f(0.f,   100.f, -0.f); 
+	
+	glVertex3f(100.f, 0.f, -0.f);    
+	glVertex3f(0.f,   100.f, 0.f);   
+	glVertex3f(100.f, 100.f, -0.f);
+
 	glEnd();
-
-	/*glBegin(GL_TRIANGLES);
-
-	for(int i = 0; i < 10; i++) 
-		for(int j = 0; j < 10; j++) 
-		{
-			glColor3f(1.f, 0.f, 0.f); glVertex3f(i*10.f,         j*10.f,        0.f);
-			glColor3f(0.f, 1.f, 0.f); glVertex3f(i*10.f,         j*10.f + 10.f, 0.f);
-			glColor3f(0.f, 0.f, 1.f); glVertex3f(i*10.f + 10.f, j*10.f,         0.f);
-			
-			glColor3f(0.f, 1.f, 0.f); glVertex3f(i*10.f,         j*10.f + 10.f, 0.f);
-			glColor3f(1.f, 1.f, 1.f); glVertex3f(i*10.f + 10.f,  j*10.f + 10.f, 0.f);
-			glColor3f(0.f, 0.f, 1.f); glVertex3f(i*10.f + 10.f, j*10.f, 0.f);
-		}
-
-	glEnd();*/
-
-	glUseProgramObjectARB(prog);
 
 	glBegin(GL_TRIANGLES);
 
@@ -103,8 +64,6 @@ void drawTriangles()
 	glColor3f(0, 1, 1); glVertex3f(200, 110, 0);
 
 	glEnd();
-
-	glUseProgramObjectARB(0);
 
 	for(int i = 0; i < 5; i++) 
 	{
@@ -121,31 +80,32 @@ void drawTriangles()
 
 void drawScene()
 {
-	// Attach our background framebuffer and render into it.
+	// render the light POV(s?)
+	spotlight->PrepareRender();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	drawTriangles(false);
+	spotlight->RenderDone();
 
+	// draw the straight light texture ortho so we can easily debug it
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0, 800, 0, 600);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	lightPosition.GlMult();
-
-    glViewport(0, 0, 1024,1024);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(90, 800.0/600.0, 1, 10000);
-    
-	glMatrixMode(GL_MODELVIEW);
-
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
-
-	// lol cornflower blue.
-	glClearColor(100/256.f,149/256.f,237/256.f, 1);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	glUseProgramObjectARB(textureProg);
+	glBindTexture(GL_TEXTURE_2D, spotlight->depthBuffer);
+	glBegin(GL_QUADS);
+	glTexCoord2d(0, 0); glVertex2d(0, 0);
+	glTexCoord2d(1, 0); glVertex2d(300, 0);
+	glTexCoord2d(1, 1); glVertex2d(300, 200);
+	glTexCoord2d(0, 1); glVertex2d(0, 200);
+	glEnd();
 
-	drawTriangles();
+	// and render the scene as we actually see it.
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-	glViewport(0, 0, 800, 600);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(90, 800.0/600.0, 1, 10000);
@@ -153,31 +113,7 @@ void drawScene()
 	glLoadIdentity();
 	viewCam.GlMult();
 
-	glClearColor(0,0,0,0);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, depthBuffer);
-	glGenerateMipmapEXT(GL_TEXTURE_2D);
-
-	glColor4d(1,1,1,1);
-
-	glBegin(GL_TRIANGLES);
-
-	glTexCoord2d(0, 0); glVertex3f(0.f,   0.f, -1.f);    
-	glTexCoord2d(1, 0); glVertex3f(400.f, 0.f, -1.f);    
-	glTexCoord2d(0, 1); glVertex3f(0.f,   300.f, -1.f);  
-	                                                      
-	glTexCoord2d(1, 0); glVertex3f(400.f, 0.f, -1.f);    
-	glTexCoord2d(0, 1); glVertex3f(0.f,   300.f, -1.f);  
-	glTexCoord2d(1, 1); glVertex3f(400.f, 300.f, -1.f);  
-
-	glEnd();
-
-	glDisable(GL_TEXTURE_2D);
-
-	drawTriangles();
+	drawTriangles(true);
 
 }
 
@@ -185,6 +121,13 @@ void drawConsole()
 {
 	glUseProgramObjectARB(0);
 	OGLCONSOLE_Draw();
+}
+
+
+void render()
+{
+	drawScene();
+	drawConsole();
 }
 
 void cmdCb(OGLCONSOLE_Console console, char *cmd)
@@ -212,6 +155,9 @@ int main(int argc, char *argv[])
     }
 
 	screen = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_OPENGL);
+
+	glViewport(0, 0, 800, 600);
+	glClearColor(0,0,0,0);
 	
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0, 0, 0, 1);
@@ -223,10 +169,6 @@ int main(int argc, char *argv[])
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	// hax
-	viewCam.InitHax(92, 100, 170, 0, 266);
-	lightPosition.InitHax(75, 70, 125, -7, 261);
-
 	console = OGLCONSOLE_Create();
 	OGLCONSOLE_EnterKey(cmdCb);
 	OGLCONSOLE_Print("SDF PLAY V%s\n", SDFPLAY_VERSION);
@@ -235,11 +177,37 @@ int main(int argc, char *argv[])
 	init_glsl();
 	init_glframebufferext();
 
-	initGraphicsShit();
-
 	const GLcharARB *progVert = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	const GLcharARB *progFrag = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
 	prog = createShaderFromProgs(progVert, progFrag);
+
+	const GLcharARB *tprogVert = "varying vec2 texcoord; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; texcoord = vec2(gl_MultiTexCoord0); }" ;
+	const GLcharARB *tprogFrag = "varying vec2 texcoord; uniform sampler2D texture; void main() { gl_FragColor = vec4(texture2D(texture, texcoord)[0]); }";
+	textureProg = createShaderFromProgs(tprogVert, tprogFrag);
+
+	const GLcharARB *sprogVert = "varying vec4 vertCol; varying vec4 lightTexPos; uniform mat4 lightMat; uniform mat4 biaser; \
+		void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; gl_Position = gl_ProjectionMatrix * lightMat * gl_Vertex; vertCol = gl_Color; }";
+	const GLcharARB *sprogFrag = "\
+		 varying vec4 vertCol; varying vec4 lightTexPos; \
+		 void main() { \
+		 if (lightTexPos[0] >= -1 && lightTexPos[0] <= 1 && lightTexPos[1] >= -1 && lightTexPos[1] <= 1) { \
+		    gl_FragColor = vertCol; \
+		 } else \
+			gl_FragColor = vec4(0.5,1,1,1); \
+		 }";
+	shadowProg = createShaderFromProgs(sprogVert, sprogFrag);
+	gslLightUniform = glGetUniformLocationARB(shadowProg, "lightMat");
+
+	GLenum biaser = glGetUniformLocationARB(shadowProg, "biaser");
+	GLfloat bias[] = { 0.5f, 0, 0, 0.5f,     0, 0.5f, 0, 0.5f,    0, 0, 0.5f, 0.5f,     0, 0, 0, 1 };
+	glUniformMatrix4fvARB(biaser, 1, false, bias);
+
+
+	// hax
+	viewCam.InitHax(92, 100, 170, 0, 266);
+
+	spotlight = new Spotlight();
+	spotlight->position.InitHax(75, 70, 125, -7, 261);
 	
 	debug("Welcoming you to the new logging world");
 
@@ -281,7 +249,7 @@ int main(int argc, char *argv[])
 						case SDLK_k:  yvel = 50; break;
 						case SDLK_u:  xvel = 50; break;
 						case SDLK_j:  xvel = -50; break;
-                        case SDLK_y:  if (activeCam == &viewCam) { activeCam = &lightPosition; } else { activeCam = &viewCam; } 
+                        case SDLK_y:  if (activeCam == &viewCam) { activeCam = &spotlight->position; } else { activeCam = &viewCam; } 
                             break;
 						default:
 							// ignore
@@ -313,8 +281,8 @@ int main(int argc, char *argv[])
 			last = time;
 			activeCam->MoveOnRelXY(xvel / 10.0f, yvel / 10.0f);
 		}
-		drawScene();
-		drawConsole();
+
+		render();
 		SDL_GL_SwapBuffers();
 	}
 
