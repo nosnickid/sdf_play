@@ -18,8 +18,11 @@ public:
 	GLuint frameBuffer;
 	GLuint depthBuffer;
 	FpsCamera position;
+	GLfloat *projMatrix;
+	GLfloat *mviewMatrix;
 	
 	Spotlight();
+	~Spotlight();
 
 	void RenderDone();
 	void PrepareRender();

@@ -45,6 +45,16 @@ Spotlight::Spotlight()
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	this->lightMatrix = new GLfloat[16];
+
+	this->projMatrix = new GLfloat[16];
+	this->mviewMatrix = new GLfloat[16];
+}
+
+Spotlight::~Spotlight()
+{
+	delete this->lightMatrix;
+	delete this->projMatrix;
+	delete this->mviewMatrix;
 }
 
 void Spotlight::PrepareRender()
@@ -58,13 +68,15 @@ void Spotlight::PrepareRender()
     glLoadIdentity();
     gluPerspective(90, 800.0/600.0, 1, 10000);
     
-	glMatrixMode(GL_MODELVIEW);
-
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
 }
 
 void Spotlight::RenderDone()
 {
+	glGetFloatv(GL_MODELVIEW_MATRIX, this->mviewMatrix);
+	checkOpenGL("Spotlight::retrieve modelview");
+	glGetFloatv(GL_PROJECTION_MATRIX, this->projMatrix);
+	checkOpenGL("Spotlight::retrieve projection");
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 

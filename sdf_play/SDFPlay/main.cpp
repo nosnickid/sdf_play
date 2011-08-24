@@ -18,10 +18,10 @@ GLhandleARB prog;
 GLhandleARB textureProg;
 GLhandleARB shadowProg;
 
+
 Spotlight *spotlight;
 FpsCamera viewCam;
 FpsCamera *activeCam = &viewCam;
-GLenum gslLightUniform = 0;
 
 int done = 0;
 
@@ -32,18 +32,53 @@ void APIENTRY theGlSlErrorHandler(GLcharARB *msg)
 	
 }
 
+void scaleAndOffs(float scale, float x, float y, float z) 
+{
+	glMatrixMode(GL_TEXTURE);
+	glActiveTextureARB(GL_TEXTURE7);
+	glPushMatrix();
+	glScalef(scale, scale, scale);
+	glTranslatef(x, y, z);
+	glActiveTextureARB(GL_TEXTURE0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glScalef(scale, scale, scale);
+	glTranslatef(x, y, z);
+}
+
+void unscale() 
+{
+	glMatrixMode(GL_TEXTURE);
+	glActiveTextureARB(GL_TEXTURE7);
+	glPopMatrix();
+	glActiveTextureARB(GL_TEXTURE0);
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
 
 
+
+GLfloat bias[] = { 0.5f, 0, 0, 0,     0, 0.5f, 0, 0,    0, 0, 0.5f, 0,     0.5f, 0.5f, 0.5f, 1 };
 
 void drawTriangles(bool isLit)
 {
 	if (isLit) {
-		GLfloat* lightMat = spotlight->GetLightMatrix();
 		glUseProgramObjectARB(shadowProg);
-		glUniformMatrix4fvARB(gslLightUniform, 1, false, lightMat);
+		glMatrixMode(GL_TEXTURE);
+		glActiveTextureARB(GL_TEXTURE7);
+		glLoadIdentity();
+		glMultMatrixf(bias);		
+		glMultMatrixf(spotlight->projMatrix);
+		glMultMatrixf(spotlight->mviewMatrix);
+
+		glActiveTextureARB(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, spotlight->depthBuffer);
 	} else {
 		glUseProgramObjectARB(0);
 	}
+
+	glMatrixMode(GL_MODELVIEW);
 
 	glColor4f(1.f, 0, 0, 1);
 	glBegin(GL_TRIANGLES);
@@ -69,11 +104,9 @@ void drawTriangles(bool isLit)
 	{
 		for(int j = 0; j < 5; j++) 
 		{
-			glPushMatrix();
-			glScalef(1.5f, 1.5f, 1.5f);
-			glTranslatef(25 + i*5.f, 25 + j * 5.f, 50);
+			scaleAndOffs(1.5f, 25 + i * 5.f, 25 + j * 5.f, 50);
 			drawTeapot();
-			glPopMatrix();
+			unscale();
 		}
 	}
 }
@@ -191,32 +224,34 @@ int main(int argc, char *argv[])
 	const GLcharARB *progVert = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; vcol = gl_Color; }" ;
 	const GLcharARB *progFrag = "varying vec4 vcol; varying vec4 sinoffs; void main() { gl_FragColor = vcol * vec4(0.5,0.5,0.5,1.0); }";
 	prog = createShaderFromProgs(progVert, progFrag);
+	checkOpenGL("shitty prog");
 
 	const GLcharARB *tprogVert = "varying vec2 texcoord; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; texcoord = vec2(gl_MultiTexCoord0); }" ;
 	const GLcharARB *tprogFrag = "varying vec2 texcoord; uniform sampler2D texture; void main() { gl_FragColor = vec4(texture2D(texture, texcoord)[0]); }";
 	textureProg = createShaderFromProgs(tprogVert, tprogFrag);
+	checkOpenGL("texture prog");
 
-	const GLcharARB *sprogVert = "varying vec4 vertCol; varying vec4 lightTexPos; uniform mat4 lightMat; uniform mat4 biaser; \
-		void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; gl_Position = gl_ProjectionMatrix * lightMat * gl_Vertex; vertCol = gl_Color; }";
-/*	const GLcharARB *sprogFrag = "\
-		 varying vec4 vertCol; varying vec4 lightTexPos; \
+	const GLcharARB *sprogVert = "\
+		varying vec4 vertCol; varying vec4 lightTexPos; \
+		void main() { \
+			gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; \
+			lightTexPos = gl_TextureMatrix[7] * gl_Vertex; \
+			lightTexPos = lightTexPos / lightTexPos[3]; \
+			vertCol = gl_Color; \
+		}";
+	const GLcharARB *sprogFrag = "\
+		 varying vec4 vertCol; varying vec4 lightTexPos; uniform sampler2D depthTexture; \
 		 void main() { \
-		 if ((lightTexPos[0] >= -1) && (lightTexPos[0] <= 1) && (lightTexPos[1] >= -1) && (lightTexPos[1] <= 1)) { \
-		    gl_FragColor = vertCol; \
+		 if ((lightTexPos[0] >= 0) && (lightTexPos[0] <= 1) && (lightTexPos[1] >= 0) && (lightTexPos[1] <= 1)) { \
+		    gl_FragColor = vertCol * texture2D(depthTexture, vec2(lightTexPos)); \
 		 } else \
-			gl_FragColor = vec4(0.5,1,1,1); \
-		 }";*/
-    const GLcharARB *sprogFrag = "varying vec4 vertCol; varying vec4 lightTexPos; void main() { gl_FragColor = vertCol; } ";
+			gl_FragColor = vertCol * 0.5; \
+		 }";
+
+    //const GLcharARB *sprogFrag = "varying vec4 vertCol; varying vec4 lightTexPos; void main() { gl_FragColor = vertCol; } ";
+
 	shadowProg = createShaderFromProgs(sprogVert, sprogFrag);
-	gslLightUniform = glGetUniformLocationARB(shadowProg, "lightMat");
-
-	GLenum biaser = glGetUniformLocationARB(shadowProg, "biaser");
-
-	glUseProgramObjectARB(shadowProg);
-	GLfloat bias[] = { 0.5f, 0, 0, 0.5f,     0, 0.5f, 0, 0.5f,    0, 0, 0.5f, 0.5f,     0, 0, 0, 1 };
-	glUniformMatrix4fvARB(biaser, 1, false, bias);
-
-    checkOpenGL("prog");
+    checkOpenGL("shadow prog");
 
 	glUseProgramObjectARB(0);
 
