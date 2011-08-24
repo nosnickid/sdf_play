@@ -26,6 +26,8 @@ void fatal(const char *fmt, va_list list)
     _debug_print(fmt, list);
 
 #ifdef WIN32
+	char res[500];
+	vsnprintf(res, sizeof(res), fmt, list);
 	MessageBoxA(0, res, "Fatel error!", MB_OK|MB_ICONERROR|MB_APPLMODAL);
 	//SDL_Quit();
 	exit(0);

@@ -211,10 +211,14 @@ int main(int argc, char *argv[])
 	gslLightUniform = glGetUniformLocationARB(shadowProg, "lightMat");
 
 	GLenum biaser = glGetUniformLocationARB(shadowProg, "biaser");
+
+	glUseProgramObjectARB(shadowProg);
 	GLfloat bias[] = { 0.5f, 0, 0, 0.5f,     0, 0.5f, 0, 0.5f,    0, 0, 0.5f, 0.5f,     0, 0, 0, 1 };
 	glUniformMatrix4fvARB(biaser, 1, false, bias);
 
     checkOpenGL("prog");
+
+	glUseProgramObjectARB(0);
 
 
 	// hax
