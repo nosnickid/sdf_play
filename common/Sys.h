@@ -16,13 +16,12 @@
 #endif
 
 
+#include <SDL.h>
+
 #ifdef WIN32
-#  include <SDL.h>
 #  ifndef APIENTRYP 
 #    define APIENTRYP APIENTRY *
 #  endif
-#else
-#  include <SDL/SDL.h>
 #endif
 
 

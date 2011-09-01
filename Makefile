@@ -8,7 +8,7 @@ INCLUDE=-I3rdparty/include -Icommon -I3rdparty/include/linux
 LIBS=-L3rdparty/lib-linux -lSDL -lpthread -ldl -lSDL_image -lGL -lGLU -loglconsole
 EXE=play
 
-CXXFLAGS=$(INCLUDE) -Wall -ggdb -DOGLCONSOLE_USE_SDL 
+CXXFLAGS=$(INCLUDE) -Wall -ggdb -DOGLCONSOLE_USE_SDL $(shell sdl-config  --cflags)
 
 CXX=g++
 
