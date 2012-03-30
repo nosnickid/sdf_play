@@ -27,9 +27,7 @@ int done = 0;
 
 void APIENTRY theGlSlErrorHandler(GLcharARB *msg) 
 {
-	OGLCONSOLE_Print(msg);
-	OGLCONSOLE_SetVisibility(1);
-	
+	fatal(msg);
 }
 
 void scaleAndOffs(float scale, float x, float y, float z) 
@@ -240,12 +238,14 @@ int main(int argc, char *argv[])
 			vertCol = gl_Color; \
 		}";
 	const GLcharARB *sprogFrag = "\
-		 varying vec4 vertCol; varying vec4 lightTexPos; uniform sampler2D depthTexture; \
+		 varying vec4 vertCol; varying vec4 lightTexPos; uniform sampler2D depthTexture;  \
 		 void main() { \
-		 if ((lightTexPos[0] >= 0) && (lightTexPos[0] <= 1) && (lightTexPos[1] >= 0) && (lightTexPos[1] <= 1)) { \
-		    gl_FragColor = vertCol * texture2D(depthTexture, vec2(lightTexPos)); \
-		 } else \
-			gl_FragColor = vertCol * 0.5; \
+		     vec4 lightFactor; \
+			 gl_FragColor = vertCol * 0.1;  \
+			 if ((lightTexPos[0] >= 0) && (lightTexPos[0] <= 1) && (lightTexPos[1] >= 0) && (lightTexPos[1] <= 1)) { \
+			 lightFactor = texture2D(depthTexture, vec2(lightTexPos));\
+				gl_FragColor = gl_FragColor + vertCol * lightFactor; \
+			 } \
 		 }";
 
     //const GLcharARB *sprogFrag = "varying vec4 vertCol; varying vec4 lightTexPos; void main() { gl_FragColor = vertCol; } ";

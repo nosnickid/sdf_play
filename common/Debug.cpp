@@ -72,7 +72,7 @@ void checkOpenGL(const char *prefix)
     int i = glGetError();
     
     while (i != GL_NO_ERROR) {
-        warning("checkOpenGL(%s): %x %s\n", prefix, i, gluErrorString(i));
+        fatal("checkOpenGL(%s): %x %s\n", prefix, i, gluErrorString(i));
         i = glGetError();
     }
 }

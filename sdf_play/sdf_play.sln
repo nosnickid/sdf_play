@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDFPlay", "SDFPlay\SDFPlay.vcproj", "{6BC0A161-45B7-4406-9E43-39330DEFD247}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9BB7F215-68CA-425C-AC74-DD5C6C70D864}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDFPlay", "SDFPlay\SDFPlay.vcxproj", "{6BC0A161-45B7-4406-9E43-39330DEFD247}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
