@@ -52,3 +52,6 @@ _ReSharper*/
 3rdparty/SDL-1.2.14/docs
 3rdparty/oglconsole/liboglconsole.a
 play
+_UpgradeReport_Files
+enc_temp_folder
+*Upgrade*

@@ -8,7 +8,13 @@
 #include "Debug.h"
 #include "teapot.h"
 
-#define SDFPLAY_VERSION "0.2-glfbext"
+#pragma warning(disable:4996)
+
+
+#include "opencv\cv.h"
+#include "opencv\highgui.h"
+
+#define SDFPLAY_VERSION "0.3-glfbext"
 
 SDL_Surface *screen;
 
@@ -178,6 +184,13 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 	if (!strncmp(cmd, "camspam", 7))
 	{
 		OGLCONSOLE_Output(console, "camspam: %s\n", activeCam->spam().c_str());
+		return;
+	}
+
+	if (!strncmp(cmd,"cap",3)) 
+	{
+		CvCapture* cap = cvCaptureFromCAM( CV_CAP_ANY );
+		if (!cap) fatal("Cap didn't work");
 		return;
 	}
 
