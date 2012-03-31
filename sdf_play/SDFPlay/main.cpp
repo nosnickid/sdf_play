@@ -24,8 +24,9 @@ GLhandleARB prog;
 GLhandleARB textureProg;
 GLhandleARB shadowProg;
 
+CvCapture* cap
 
-Spotlight *spotlight;
+Spotlight* spotlight;
 FpsCamera viewCam;
 FpsCamera *activeCam = &viewCam;
 
@@ -189,8 +190,7 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 
 	if (!strncmp(cmd,"cap",3)) 
 	{
-		CvCapture* cap = cvCaptureFromCAM( CV_CAP_ANY );
-		if (!cap) fatal("Cap didn't work");
+		IplImage* frame = cvQueryFrame(cap);
 		return;
 	}
 
@@ -288,6 +288,10 @@ int main(int argc, char *argv[])
 	Uint32 last = time;
 
 	GLfloat xvel = 0, yvel = 0;
+
+	cap = cvCaptureFromCAM( CV_CAP_ANY );
+	if (!cap) fatal("Cap didn't work");
+
    
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {
