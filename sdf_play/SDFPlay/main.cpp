@@ -7,6 +7,7 @@
 #include "FpsCamera.h"
 #include "Debug.h"
 #include "teapot.h"
+#include "SdfCvCamera.h"
 
 #pragma warning(disable:4996)
 
@@ -24,11 +25,11 @@ GLhandleARB prog;
 GLhandleARB textureProg;
 GLhandleARB shadowProg;
 
-CvCapture* cap
 
 Spotlight* spotlight;
 FpsCamera viewCam;
 FpsCamera *activeCam = &viewCam;
+SdfCvCamera *cvCam = NULL;
 
 int done = 0;
 
@@ -136,7 +137,11 @@ void drawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glUseProgramObjectARB(textureProg);
-	glBindTexture(GL_TEXTURE_2D, spotlight->depthBuffer);
+	if (cvCam->frameTexture > 0) {
+		glBindTexture(GL_TEXTURE_2D, cvCam->frameTexture);
+	} else {
+		glBindTexture(GL_TEXTURE_2D, spotlight->depthBuffer);
+	}
 	glBegin(GL_QUADS);
 	glTexCoord2d(0, 0); glVertex2d(0, 0);
 	glTexCoord2d(1, 0); glVertex2d(300, 0);
@@ -145,6 +150,7 @@ void drawScene()
 	glEnd();
 
     checkOpenGL("render depth preview");
+	
 
 	// and render the scene as we actually see it.
 
@@ -174,6 +180,11 @@ void render()
 	drawConsole();
 }
 
+
+void doCapture() {
+	cvCam->captureFrame();
+}
+
 void cmdCb(OGLCONSOLE_Console console, char *cmd)
 {
     if (!strncmp(cmd, "quit", 4)) 
@@ -190,7 +201,7 @@ void cmdCb(OGLCONSOLE_Console console, char *cmd)
 
 	if (!strncmp(cmd,"cap",3)) 
 	{
-		IplImage* frame = cvQueryFrame(cap);
+		doCapture();
 		return;
 	}
 
@@ -209,6 +220,7 @@ int main(int argc, char *argv[])
 	glViewport(0, 0, 800, 600);
 	glClearColor(0,0,0,0);
 	
+
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0, 0, 0, 1);
 	glClearDepth(1.0f);
@@ -238,7 +250,7 @@ int main(int argc, char *argv[])
 	checkOpenGL("shitty prog");
 
 	const GLcharARB *tprogVert = "varying vec2 texcoord; void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; texcoord = vec2(gl_MultiTexCoord0); }" ;
-	const GLcharARB *tprogFrag = "varying vec2 texcoord; uniform sampler2D texture; void main() { gl_FragColor = vec4(texture2D(texture, texcoord)[0]); }";
+	const GLcharARB *tprogFrag = "varying vec2 texcoord; uniform sampler2D texture; void main() { gl_FragColor = texture2D(texture, texcoord); }";
 	textureProg = createShaderFromProgs(tprogVert, tprogFrag);
 	checkOpenGL("texture prog");
 
@@ -289,9 +301,8 @@ int main(int argc, char *argv[])
 
 	GLfloat xvel = 0, yvel = 0;
 
-	cap = cvCaptureFromCAM( CV_CAP_ANY );
-	if (!cap) fatal("Cap didn't work");
-
+	cvCam = new SdfCvCamera();
+	cvCam->createTextureForFrame();
    
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {
@@ -322,6 +333,7 @@ int main(int argc, char *argv[])
                         case SDLK_y:  if (activeCam == &viewCam) { activeCam = &spotlight->position; } else { activeCam = &viewCam; } 
                             break;
                         case SDLK_i: OGLCONSOLE_SetVisibility(1); break;
+						case SDLK_t: doCapture(); break;
 						default:
 							// ignore
 							break;
@@ -353,10 +365,12 @@ int main(int argc, char *argv[])
 			activeCam->MoveOnRelXY(xvel / 10.0f, yvel / 10.0f);
 		}
 
+		cvCam->captureFrame();
 		render();
 		SDL_GL_SwapBuffers();
 	}
 
+	delete cvCam;
 	OGLCONSOLE_Destroy(console);
 	SDL_Quit();
 	    

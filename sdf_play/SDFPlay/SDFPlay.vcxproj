@@ -57,9 +57,10 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;GLU32.lib;opengl32.lib;opencv_highgui231.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;GLU32.lib;opengl32.lib;opencv_core231.lib;opencv_highgui231.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\3rdparty\SDL-1.2.14\lib;..\..\3rdparty\opencv\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -95,6 +96,7 @@
     <ClCompile Include="glsl.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\..\3rdparty\oglconsole\oglconsole.c" />
+    <ClCompile Include="SdfCvCamera.cpp" />
     <ClCompile Include="sdl_glframebufferext.cpp" />
     <ClCompile Include="sdl_glsl.cpp" />
     <ClCompile Include="Spotlight.cpp" />
@@ -106,6 +108,7 @@
     <ClInclude Include="glframebufferext.h" />
     <ClInclude Include="glsl.h" />
     <ClInclude Include="..\..\3rdparty\oglconsole\oglconsole.h" />
+    <ClInclude Include="SdfCvCamera.h" />
     <ClInclude Include="Spotlight.h" />
     <ClInclude Include="Sys.h" />
     <ClInclude Include="..\..\common\teapot.h" />

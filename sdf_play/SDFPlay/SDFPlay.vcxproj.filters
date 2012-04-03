@@ -39,6 +39,9 @@
     <ClCompile Include="Spotlight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SdfCvCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h">
@@ -66,6 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\teapot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfCvCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
