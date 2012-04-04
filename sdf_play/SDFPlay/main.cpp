@@ -12,8 +12,8 @@
 #pragma warning(disable:4996)
 
 
-#include "opencv\cv.h"
-#include "opencv\highgui.h"
+#include "opencv/cv.h"
+#include "opencv/highgui.h"
 
 #define SDFPLAY_VERSION "0.3-glfbext"
 

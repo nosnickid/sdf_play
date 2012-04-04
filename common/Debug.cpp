@@ -9,6 +9,10 @@ void _debug_print(const char *msg, va_list varg)
     char res[500];
     vsnprintf(res, sizeof(res), msg, varg);
 
+#ifndef WIN32
+    printf(res);
+    printf("\n");
+#endif
     OGLCONSOLE_Print(res);
     OGLCONSOLE_Print("\n");
 }
