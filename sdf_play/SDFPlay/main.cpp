@@ -7,8 +7,7 @@
 #include "FpsCamera.h"
 #include "Debug.h"
 #include "teapot.h"
-#include "SdfCvCamera.h"
-#include "ManualDepthMap.h"
+#include "DepthCameraRenderer.h"
 
 #pragma warning(disable:4996)
 
@@ -30,8 +29,7 @@ GLhandleARB shadowProg;
 Spotlight* spotlight;
 FpsCamera viewCam;
 FpsCamera *activeCam = &viewCam;
-SdfCvCamera *cvCam = NULL;
-AbstractDepthMap *depthMap = NULL;
+sdf_play::render::DepthCameraRenderer *dc;
 
 int done = 0;
 
@@ -119,6 +117,10 @@ void drawTriangles(bool isLit)
 	}
 }
 
+void drawDepthCameraScene() {
+	// start 
+}
+
 void renderPreviewTexture(GLuint texture, int x, int y, int w, int h) {
 	glUseProgramObjectARB(textureProg);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -141,6 +143,8 @@ void drawScene()
 
     checkOpenGL("render shadow depth");
 
+	dc->prepareFrame();
+
 	// draw the straight light texture ortho so we can easily debug it
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -151,12 +155,12 @@ void drawScene()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	int previewSize = 70;
-	renderPreviewTexture(depthMap->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
+	int previewSize = 100;
+	renderPreviewTexture(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
 	renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
-	renderPreviewTexture(cvCam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	renderPreviewTexture(dc->cam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
-    checkOpenGL("render depth preview");
+	checkOpenGL("render depth preview");
 	
 
 	// and render the scene as we actually see it.
@@ -170,8 +174,12 @@ void drawScene()
 
 	drawTriangles(true);
 
-    checkOpenGL("render scene nicely");
+	checkOpenGL("render lighting scene");
 
+
+	dc->render();
+
+	checkOpenGL("render depth cam scene");
 }
 
 void drawConsole()
@@ -293,11 +301,8 @@ int main(int argc, char *argv[])
 
 	GLfloat xvel = 0, yvel = 0;
 
-	cvCam = new SdfCvCamera();
-	cvCam->createTextureForFrame();
-
-	depthMap = new ManualDepthMap();
-	depthMap->loadDepthMap();
+	dc = new sdf_play::render::DepthCameraRenderer();
+	dc->init();
    
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {
@@ -359,12 +364,11 @@ int main(int argc, char *argv[])
 			activeCam->MoveOnRelXY(xvel / 15.0f, yvel / 15.0f);
 		}
 
-		cvCam->captureFrame();
 		render();
 		SDL_GL_SwapBuffers();
 	}
 
-	delete cvCam;
+	delete dc;
 	OGLCONSOLE_Destroy(console);
 	SDL_Quit();
 	    

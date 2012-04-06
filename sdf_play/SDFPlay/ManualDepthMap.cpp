@@ -1,5 +1,7 @@
 #include "ManualDepthMap.h"
 
+using namespace sdf_play::render;
+
 ManualDepthMap::ManualDepthMap() {
 	this->texture = 0;
 }
