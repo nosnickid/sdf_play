@@ -63,6 +63,7 @@ void Spotlight::PrepareRender()
 	glLoadIdentity();
 	position.GlMult();
 
+	glGetIntegerv(GL_VIEWPORT, this->viewport);
     glViewport(0, 0, 1024,1024);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -78,6 +79,7 @@ void Spotlight::RenderDone()
 	glGetFloatv(GL_PROJECTION_MATRIX, this->projMatrix);
 	checkOpenGL("Spotlight::retrieve projection");
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glViewport(this->viewport[0], this->viewport[1], this->viewport[2], this->viewport[3]);
 }
 
 GLfloat* Spotlight::GetLightMatrix()

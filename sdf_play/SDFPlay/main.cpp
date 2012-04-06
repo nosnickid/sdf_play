@@ -8,6 +8,7 @@
 #include "Debug.h"
 #include "teapot.h"
 #include "SdfCvCamera.h"
+#include "ManualDepthMap.h"
 
 #pragma warning(disable:4996)
 
@@ -15,7 +16,7 @@
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
 
-#define SDFPLAY_VERSION "0.3-glfbext"
+#define SDFPLAY_VERSION "0.4-opencv"
 
 SDL_Surface *screen;
 
@@ -30,6 +31,7 @@ Spotlight* spotlight;
 FpsCamera viewCam;
 FpsCamera *activeCam = &viewCam;
 SdfCvCamera *cvCam = NULL;
+AbstractDepthMap *depthMap = NULL;
 
 int done = 0;
 
@@ -117,6 +119,18 @@ void drawTriangles(bool isLit)
 	}
 }
 
+void renderPreviewTexture(GLuint texture, int x, int y, int w, int h) {
+	glUseProgramObjectARB(textureProg);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glBegin(GL_QUADS);
+	glTexCoord2d(0, 0); glVertex2i(x, y);
+	glTexCoord2d(1, 0); glVertex2i(x+w, y);
+	glTexCoord2d(1, 1); glVertex2i(x+w, y+h);
+	glTexCoord2d(0, 1); glVertex2i(x, y+h);
+	glEnd();
+
+}
+
 void drawScene()
 {
 	// render the light POV(s?)
@@ -130,24 +144,17 @@ void drawScene()
 	// draw the straight light texture ortho so we can easily debug it
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, 800, 0, 600);
+	//gluOrtho2D(0, 800, 0, 900);
+	glOrtho(0, 800, 0, 600, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	glUseProgramObjectARB(textureProg);
-	if (cvCam->frameTexture > 0) {
-		glBindTexture(GL_TEXTURE_2D, cvCam->frameTexture);
-	} else {
-		glBindTexture(GL_TEXTURE_2D, spotlight->depthBuffer);
-	}
-	glBegin(GL_QUADS);
-	glTexCoord2d(0, 0); glVertex2d(0, 0);
-	glTexCoord2d(1, 0); glVertex2d(300, 0);
-	glTexCoord2d(1, 1); glVertex2d(300, 200);
-	glTexCoord2d(0, 1); glVertex2d(0, 200);
-	glEnd();
+
+	int previewSize = 70;
+	renderPreviewTexture(depthMap->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
+	renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
+	renderPreviewTexture(cvCam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
     checkOpenGL("render depth preview");
 	
@@ -181,31 +188,16 @@ void render()
 }
 
 
-void doCapture() {
-	cvCam->captureFrame();
-}
-
 void cmdCb(OGLCONSOLE_Console console, char *cmd)
 {
     if (!strncmp(cmd, "quit", 4)) 
 	{
 		done = true; 
-		return;
-	}
-
-	if (!strncmp(cmd, "camspam", 7))
-	{
+	} else if (!strncmp(cmd, "camspam", 7)) {
 		OGLCONSOLE_Output(console, "camspam: %s\n", activeCam->spam().c_str());
-		return;
+	} else {
+	    OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
 	}
-
-	if (!strncmp(cmd,"cap",3)) 
-	{
-		doCapture();
-		return;
-	}
-
-    OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
 }
 
 int main(int argc, char *argv[])
@@ -303,6 +295,9 @@ int main(int argc, char *argv[])
 
 	cvCam = new SdfCvCamera();
 	cvCam->createTextureForFrame();
+
+	depthMap = new ManualDepthMap();
+	depthMap->loadDepthMap();
    
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {
@@ -333,7 +328,6 @@ int main(int argc, char *argv[])
                         case SDLK_y:  if (activeCam == &viewCam) { activeCam = &spotlight->position; } else { activeCam = &viewCam; } 
                             break;
                         case SDLK_i: OGLCONSOLE_SetVisibility(1); break;
-						case SDLK_t: doCapture(); break;
 						default:
 							// ignore
 							break;
@@ -359,10 +353,10 @@ int main(int argc, char *argv[])
 			}
 		}
 		time = SDL_GetTicks();
-		if (time - last > 100) 
+		if (time - last > 50) 
 		{
 			last = time;
-			activeCam->MoveOnRelXY(xvel / 10.0f, yvel / 10.0f);
+			activeCam->MoveOnRelXY(xvel / 15.0f, yvel / 15.0f);
 		}
 
 		cvCam->captureFrame();
@@ -377,3 +371,4 @@ int main(int argc, char *argv[])
 
 	return 0;   
 }
+

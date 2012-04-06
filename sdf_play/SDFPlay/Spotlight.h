@@ -20,6 +20,7 @@ public:
 	FpsCamera position;
 	GLfloat *projMatrix;
 	GLfloat *mviewMatrix;
+	GLint viewport[4];
 	
 	Spotlight();
 	~Spotlight();

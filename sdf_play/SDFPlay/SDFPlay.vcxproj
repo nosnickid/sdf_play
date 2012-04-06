@@ -96,6 +96,7 @@
     <ClCompile Include="glsl.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\..\3rdparty\oglconsole\oglconsole.c" />
+    <ClCompile Include="ManualDepthMap.cpp" />
     <ClCompile Include="SdfCvCamera.cpp" />
     <ClCompile Include="sdl_glframebufferext.cpp" />
     <ClCompile Include="sdl_glsl.cpp" />
@@ -104,10 +105,12 @@
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h" />
     <ClInclude Include="..\..\common\FpsCamera.h" />
+    <ClInclude Include="AbstractDepthMap.h" />
     <ClInclude Include="glext.h" />
     <ClInclude Include="glframebufferext.h" />
     <ClInclude Include="glsl.h" />
     <ClInclude Include="..\..\3rdparty\oglconsole\oglconsole.h" />
+    <ClInclude Include="ManualDepthMap.h" />
     <ClInclude Include="SdfCvCamera.h" />
     <ClInclude Include="Spotlight.h" />
     <ClInclude Include="Sys.h" />
