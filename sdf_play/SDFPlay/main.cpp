@@ -33,9 +33,9 @@ sdf_play::render::DepthCameraRenderer *dc;
 
 int done = 0;
 
-void APIENTRY theGlSlErrorHandler(GLcharARB *msg) 
+void APIENTRY theGlSlErrorHandler(const GLcharARB *program, const GLcharARB *msg) 
 {
-	fatal(msg);
+	fatal("%s\n%s", program, msg);
 }
 
 void scaleAndOffs(float scale, float x, float y, float z) 
@@ -136,13 +136,13 @@ void renderPreviewTexture(GLuint texture, int x, int y, int w, int h) {
 void drawScene()
 {
 	// render the light POV(s?)
-	spotlight->PrepareRender();
+	/*spotlight->PrepareRender();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	drawTriangles(false);
 	spotlight->RenderDone();
 
     checkOpenGL("render shadow depth");
-
+	*/
 	dc->prepareFrame();
 
 	// draw the straight light texture ortho so we can easily debug it
@@ -156,9 +156,9 @@ void drawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	int previewSize = 100;
-	renderPreviewTexture(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
-	renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
-	renderPreviewTexture(dc->cam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	///renderPreviewTexture(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
+	//renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
+	//renderPreviewTexture(dc->cam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
 	checkOpenGL("render depth preview");
 	
@@ -172,7 +172,10 @@ void drawScene()
 	glLoadIdentity();
 	viewCam.GlMult();
 
-	drawTriangles(true);
+	//drawTriangles(true);
+
+
+	renderPreviewTexture(dc->cam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
 	checkOpenGL("render lighting scene");
 
@@ -267,7 +270,7 @@ int main(int argc, char *argv[])
 		 void main() { \
 		     vec4 lightFactor; \
 			 gl_FragColor = vertCol * 0.1;  \
-			 if ((lightTexPos[0] >= 0) && (lightTexPos[0] <= 1) && (lightTexPos[1] >= 0) && (lightTexPos[1] <= 1)) { \
+			 if ((lightTexPos[0] >= 0.0) && (lightTexPos[0] <= 1.0) && (lightTexPos[1] >= 0.0) && (lightTexPos[1] <= 1.0)) { \
 			 lightFactor = texture2D(depthTexture, vec2(lightTexPos));\
 				gl_FragColor = gl_FragColor + vertCol * lightFactor; \
 			 } \
@@ -303,6 +306,7 @@ int main(int argc, char *argv[])
 
 	dc = new sdf_play::render::DepthCameraRenderer();
 	dc->init();
+	dc->cam->textureProg = textureProg;
    
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {

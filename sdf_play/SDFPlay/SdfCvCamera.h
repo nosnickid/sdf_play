@@ -6,19 +6,24 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "glext.h"
+#include "Renderable.h"
 
+using namespace sdf_play::render;
 
-class SdfCvCamera {
+class SdfCvCamera: public Renderable {
 protected:
 	void loadTextureFromIpl();	
 public:
 	CvCapture* camera;
 	IplImage* frame;
 	GLuint frameTexture;
+	GLhandleARB textureProg;
 
 	SdfCvCamera();
 	~SdfCvCamera();
-	void captureFrame();
+	void init();
+	virtual void prepareFrame();
+	virtual void render();
 	void createTextureForFrame();
 	
 };

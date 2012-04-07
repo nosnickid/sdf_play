@@ -2,9 +2,9 @@
 
 PFNGLSLERRORHANDLER gHandler;
 
-void glslReportError(char *msg) 
+void glslReportError(const char *prog, const char *msg) 
 {
-	if (gHandler != NULL) (*gHandler)(msg);
+	if (gHandler != NULL) (*gHandler)(prog, msg);
 }
 
 
@@ -26,7 +26,7 @@ GLhandleARB createShaderFromProgs(const GLcharARB *vertProg, const GLcharARB *fr
 	{
 		glGetInfoLogARB(vertex, 999, &infobufferlen, infobuffer);
 		infobuffer[infobufferlen] = 0;
-		glslReportError(infobuffer);
+		glslReportError(vertProg, infobuffer);
 	}
 	
 	GLhandleARB frag = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
@@ -38,7 +38,7 @@ GLhandleARB createShaderFromProgs(const GLcharARB *vertProg, const GLcharARB *fr
 	{
 		glGetInfoLogARB(frag, 999, &infobufferlen, infobuffer);
 		infobuffer[infobufferlen] = 0;
-		glslReportError(infobuffer);
+		glslReportError(fragProg, infobuffer);
 	}
 
 

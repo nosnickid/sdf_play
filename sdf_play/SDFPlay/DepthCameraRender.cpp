@@ -11,7 +11,7 @@ DepthCameraRenderer::~DepthCameraRenderer() {
 
 void DepthCameraRenderer::init() {
 	this->cam = new SdfCvCamera();
-	this->cam->createTextureForFrame();
+	this->cam->init();
 	this->depth = new ManualDepthMap();
 	this->depth->loadDepthMap();
 
@@ -19,8 +19,9 @@ void DepthCameraRenderer::init() {
 }
 
 void DepthCameraRenderer::prepareFrame() {
-	this->cam->captureFrame();
+	this->cam->prepareFrame();
 }
 
 void DepthCameraRenderer::render() {
+	this->cam->render();
 }

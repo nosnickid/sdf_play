@@ -31,7 +31,7 @@ extern PFNGLUNIFORMMATRIX4FVARBPROC glUniformMatrix4fvARB;
 extern PFNGLACTIVETEXTUREARBPROC glActiveTextureARB;
 #endif
 
-typedef void (APIENTRYP PFNGLSLERRORHANDLER) (GLcharARB *message);
+typedef void (APIENTRYP PFNGLSLERRORHANDLER) (const GLcharARB *prog, const GLcharARB *message);
 
 void init_glsl();
 
