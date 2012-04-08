@@ -13,7 +13,7 @@ void SdfCvImageKinect::loadRgbImage() {
 	IplImage *frame = this->kinToCv->cvRGBImage;
 
 	glBindTexture( GL_TEXTURE_2D, this->frameTexture); //bind the texture to it's array
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, frame->width, frame->height, 0, GL_BGR, GL_UNSIGNED_BYTE, frame->imageData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, frame->width, frame->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, frame->imageData);
 	checkOpenGL("Image data from cap to texture");	
 }
 
