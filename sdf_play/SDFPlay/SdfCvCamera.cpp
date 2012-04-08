@@ -62,15 +62,31 @@ void SdfCvCamera::prepareFrame() {
 void SdfCvCamera::render() {
 	glUseProgramObjectARB(this->textureProg);
 	glBindTexture(GL_TEXTURE_2D, this->frameTexture);
-	glBegin(GL_QUADS);
-	int x = 0;
-	int y = 0;
+	
+	//int x = 0;
+	//int y = 0;
 	int w = 320;
 	int h = 240;
-	glTexCoord2d(0, 0); glVertex3i(x, 0, y);
-	glTexCoord2d(0, 1); glVertex3i(x+w, 0, y);
-	glTexCoord2d(1, 1); glVertex3i(x+w, 0, y+h);
-	glTexCoord2d(1, 0); glVertex3i(x, 0, y+h);
+	int s = 1;
+
+	double tistep = 1 / (double) w;
+	double tjstep = 1 / (double) h;
+	double ti = 0, tj;
+	glBegin(GL_QUADS);
+	for(int i = 0; i < w; i++, ti += tistep) {
+		double ti = i / (double) w;
+		int j;
+		for(j = 0, tj = 0.0; j < h; j++, tj += tjstep) {
+			glTexCoord2d(ti, tj); 
+			glVertex3i(i, 0, j);
+			glTexCoord2d(ti, tj + tjstep); 
+			glVertex3i(i+s, 0, j);
+			glTexCoord2d(ti + tistep, tj + tjstep);
+			glVertex3i(i+s, 0, j+s);
+			glTexCoord2d(ti + tistep, tj); 
+			glVertex3i(i, 0, j+s);
+		}
+	}
 	glEnd();
 
 }
