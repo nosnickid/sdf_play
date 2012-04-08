@@ -43,11 +43,12 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(KINECTSDK10_DIR)\inc;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\3rdparty\sdl-1.2.14\include;..\..\3rdparty\oglconsole;..\..\common;..\..\3rdparty\opencv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(KINECT10SDK_DIR)\inc;..\..\3rdparty\sdl-1.2.14\include;..\..\3rdparty\oglconsole;..\..\common;..\..\3rdparty\opencv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;OGLCONSOLE_USE_SDL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -61,7 +62,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL.lib;SDLmain.lib;GLU32.lib;opengl32.lib;opencv_core231.lib;opencv_highgui231.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\3rdparty\SDL-1.2.14\lib;..\..\3rdparty\opencv\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\3rdparty\SDL-1.2.14\lib;$(KINECT10SDK_DIR)\lib\x86;..\..\3rdparty\opencv\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -95,6 +96,7 @@
     <ClCompile Include="..\..\common\FpsCamera.cpp" />
     <ClCompile Include="DepthCameraRender.cpp" />
     <ClCompile Include="glsl.cpp" />
+    <ClCompile Include="KinectToOpenCV.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\..\3rdparty\oglconsole\oglconsole.c" />
     <ClCompile Include="ManualDepthMap.cpp" />
@@ -112,6 +114,7 @@
     <ClInclude Include="glframebufferext.h" />
     <ClInclude Include="glsl.h" />
     <ClInclude Include="..\..\3rdparty\oglconsole\oglconsole.h" />
+    <ClInclude Include="KinectToOpenCV.h" />
     <ClInclude Include="ManualDepthMap.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="SdfCvCamera.h" />
