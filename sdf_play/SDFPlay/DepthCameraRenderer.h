@@ -10,6 +10,9 @@ namespace sdf_play { namespace render {
 	class DepthCameraRenderer: public Renderable {
 	public:
 		GLhandleARB depthProg;
+		GLint glslDepthTexture;
+		GLint glslColorTexture;
+		GLint glslSurfaceNormal;
 
 		SdfCvCamera *cam;
 		AbstractDepthMap *depth;
