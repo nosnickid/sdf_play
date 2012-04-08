@@ -10,8 +10,8 @@ void ManualDepthMap::loadDepthMap() {
 	glBindTexture(GL_TEXTURE_2D, this->getDepthMapTexture());
 
 	// Manually build some array
-	const int w = 512;
-	const int h = 512;
+	const int w = 320;
+	const int h = 240;
 	GLubyte map[w*h];
 	
 	for(int x = 0; x < w; x++) {

@@ -156,9 +156,9 @@ void drawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	int previewSize = 100;
-	///renderPreviewTexture(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
-	//renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
-	//renderPreviewTexture(dc->cam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	renderPreviewTexture(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
+	renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
+	renderPreviewTexture(dc->cam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
 	checkOpenGL("render depth preview");
 	

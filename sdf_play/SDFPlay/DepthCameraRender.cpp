@@ -22,7 +22,8 @@ void DepthCameraRenderer::init() {
 		uniform vec4 surfaceNormal; \
 		void main() { \
 			texcoord = vec2(gl_MultiTexCoord0); \
-		    gl_Position = gl_ModelViewProjectionMatrix * (surfaceNormal * texture2D(depthTexture, texcoord)[0] + gl_Vertex);\
+		    gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex);\
+			gl_Position += (30 * surfaceNormal * (texture2D(depthTexture, texcoord)[0]));\
 		}";
 	const GLcharARB *tprogFrag = "\
 		varying vec2 texcoord; \
@@ -71,19 +72,35 @@ void DepthCameraRenderer::render() {
 	double tistep = 1 / (double) w;
 	double tjstep = 1 / (double) h;
 	double ti = 0, tj;
-	glBegin(GL_QUADS);
+	glBegin(GL_TRIANGLES);
 	for(int i = 0; i < w; i++, ti += tistep) {
 		double ti = i / (double) w;
 		int j;
 		for(j = 0, tj = 0.0; j < h; j++, tj += tjstep) {
+			// 0
 			glTexCoord2d(ti, tj); 
 			glVertex3i(i, 0, j);
-			glTexCoord2d(ti, tj + tjstep); 
+
+			// 1
+			glTexCoord2d(ti + tistep, tj); 
 			glVertex3i(i+s, 0, j);
+
+			// 2
 			glTexCoord2d(ti + tistep, tj + tjstep);
 			glVertex3i(i+s, 0, j+s);
-			glTexCoord2d(ti + tistep, tj); 
+
+			// 2
+			glTexCoord2d(ti + tistep, tj + tjstep);
+			glVertex3i(i+s, 0, j+s);
+
+			// 3
+			glTexCoord2d(ti, tj + tjstep); 
 			glVertex3i(i, 0, j+s);
+
+			// 0
+			glTexCoord2d(ti, tj); 
+			glVertex3i(i, 0, j);
+
 		}
 	}
 	glEnd();
@@ -91,3 +108,30 @@ void DepthCameraRenderer::render() {
 	glActiveTextureARB(GL_TEXTURE0);
 
 }
+
+/*
+			// 0
+			glTexCoord2d(ti, tj); 
+			glVertex3i(i, 0, j);
+
+			// 1
+			glTexCoord2d(ti, tj + tjstep); 
+			glVertex3i(i+s, 0, j);
+
+			// 2
+			glTexCoord2d(ti + tistep, tj + tjstep);
+			glVertex3i(i+s, 0, j+s);
+
+			// 2
+			glTexCoord2d(ti + tistep, tj + tjstep);
+			glVertex3i(i+s, 0, j+s);
+
+			// 3
+			glTexCoord2d(ti + tistep, tj); 
+			glVertex3i(i, 0, j+s);
+
+			// 0
+			glTexCoord2d(ti, tj); 
+			glVertex3i(i, 0, j);
+
+*/
