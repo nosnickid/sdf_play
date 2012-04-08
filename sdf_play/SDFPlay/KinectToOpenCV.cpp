@@ -6,10 +6,6 @@
 #pragma comment(lib, "opencv_highgui231.lib")
 
 
-namespace orangestems { namespace kinect {
-
-DWORD WINAPI RGBImage( LPVOID lpParam );
-DWORD WINAPI DepthImage( LPVOID lpParam );
 RGBQUAD Nui_ShortToQuad( unsigned short s );
 
 void KinectToOpenCV::init() {
@@ -28,8 +24,8 @@ void KinectToOpenCV::init() {
 	NuiImageStreamOpen( NUI_IMAGE_TYPE::NUI_IMAGE_TYPE_COLOR, NUI_IMAGE_RESOLUTION::NUI_IMAGE_RESOLUTION_640x480, NULL, 2, hEvents[0], &hStreams[0] );
 	NuiImageStreamOpen( NUI_IMAGE_TYPE::NUI_IMAGE_TYPE_DEPTH, NUI_IMAGE_RESOLUTION::NUI_IMAGE_RESOLUTION_320x240, NULL, 2, hEvents[1], &hStreams[1] );
 
-	this->hThreads[0] = CreateThread( NULL, 0, RGBImage, (LPVOID*)(this), NULL, NULL);
-	this->hThreads[1] = CreateThread( NULL, 0, DepthImage, (LPVOID*)(this), NULL, NULL);
+	//this->hThreads[0] = CreateThread( NULL, 0, RGBImage, (LPVOID*)(this), NULL, NULL);
+	//this->hThreads[1] = CreateThread( NULL, 0, DepthImage, (LPVOID*)(this), NULL, NULL);
 
 }
 
@@ -37,49 +33,50 @@ KinectToOpenCV::~KinectToOpenCV() {
 	NuiShutdown();
 }
 
-DWORD WINAPI RGBImage( LPVOID lpParam )
-{
-	KinectToOpenCV *ko = (KinectToOpenCV *) lpParam;
+bool KinectToOpenCV::prepareFrame() {
+	this->pollRGB();
+	this->pollDepth();
 
-	while ( true )
-	{
-		WaitForSingleObject( ko->hEvents[0], INFINITE);
+	if (updated[0] && updated[1]) {
+		updated[0] = updated[1] = false;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+void KinectToOpenCV::pollRGB() {
+	if (WaitForSingleObject( this->hEvents[0], 0)) {
 		//printf( "[+] Got RGB Frame!\n" );
 
 		const NUI_IMAGE_FRAME *RGBFrame;
-		NuiImageStreamGetNextFrame( ko->hStreams[0], NULL, &RGBFrame );
+		NuiImageStreamGetNextFrame( this->hStreams[0], NULL, &RGBFrame );
 
 		NUI_LOCKED_RECT lockedRGB;
 		RGBFrame->pFrameTexture->LockRect( NULL, &lockedRGB, NULL, NULL );
 		
-		cvSetData( ko->cvRGBImage, (unsigned char*)lockedRGB.pBits, lockedRGB.Pitch );
+		cvSetData( this->cvRGBImage, (unsigned char*)lockedRGB.pBits, lockedRGB.Pitch );
 		// cvShowImage( "RGB", ko->cvRGBImage );
 		// if ( cvWaitKey( 1 ) == 'x' ){ break; }
 
-		NuiImageStreamReleaseFrame( ko->hStreams[0], RGBFrame );
-	}
+		NuiImageStreamReleaseFrame( this->hStreams[0], RGBFrame );
 
-	return 0;
+		updated[0] = 1;
+	}
 }
 
-DWORD WINAPI DepthImage( LPVOID lpParam )
-{
-	KinectToOpenCV *ko = (KinectToOpenCV *) lpParam;
-
-	while ( true )
-	{
-		WaitForSingleObject( ko->hEvents[1], INFINITE);
-		printf( "[+] Got Depth Frame!\n" );
-
+void KinectToOpenCV::pollDepth() {
+	if (WaitForSingleObject( this->hEvents[1], 0)) {
 		const NUI_IMAGE_FRAME *DepthFrame;
-		NuiImageStreamGetNextFrame( ko->hStreams[1], NULL, &DepthFrame );
+		NuiImageStreamGetNextFrame( this->hStreams[1], NULL, &DepthFrame );
 		
 		NUI_LOCKED_RECT lockedDepth;
 		DepthFrame->pFrameTexture->LockRect( NULL, &lockedDepth, NULL, NULL );
 		
 		unsigned char* Buffer = (unsigned char*) lockedDepth.pBits;
 		
-		RGBQUAD* rgbLoop =  ko->RGBDepth;
+		RGBQUAD* rgbLoop =  this->RGBDepth;
 		unsigned short* BufferLoop = (unsigned short*) Buffer;
 
 		for ( int y = 0; y < 240; y++ )
@@ -94,17 +91,17 @@ DWORD WINAPI DepthImage( LPVOID lpParam )
 			}
 		}
 
-		cvSetData( ko->cvDepthImage, (unsigned char*) ko->RGBDepth, ko->cvDepthImage->widthStep );
+		cvSetData( this->cvDepthImage, (unsigned char*) this->RGBDepth, this->cvDepthImage->widthStep );
 		//cvCvtColor( cvDepthImage, DepthEdges, CV_RGB2GRAY);
 		//cvCanny(  DepthEdges, DepthEdges2, 100, 100, 3 );
 		
 		// cvShowImage( "Depth",  ko->cvDepthImage );
 		// if ( cvWaitKey( 1 ) == 'x' ){ break; }
 
-		NuiImageStreamReleaseFrame( ko->hStreams[1], DepthFrame );
-	}
+		NuiImageStreamReleaseFrame( this->hStreams[1], DepthFrame );
 
-	return 0;
+		updated[1] = true;
+	}
 }
 
 
@@ -164,5 +161,4 @@ RGBQUAD Nui_ShortToQuad( unsigned short s )
 
 	
 
-}}
 

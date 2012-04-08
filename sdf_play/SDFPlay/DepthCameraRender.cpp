@@ -2,15 +2,14 @@
 #include "ManualDepthMap.h"
 #include "glsl.h"
 
-using namespace sdf_play::render;
-
 DepthCameraRenderer::~DepthCameraRenderer() {
 	delete this->cam;
 	delete this->depth;
 }
 
 void DepthCameraRenderer::init() {
-	this->cam = new SdfCvCamera();
+	//this->cam = new SdfCvCamera();
+	this->cam = (SdfCvImage *) new SdfCvImageKinect();
 	this->cam->init();
 	this->depth = new ManualDepthMap();
 	this->depth->loadDepthMap();
@@ -61,7 +60,7 @@ void DepthCameraRenderer::render() {
 	checkOpenGL("bind depth texture");
 	//*/
 	glActiveTextureARB(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, this->cam->frameTexture);
+	glBindTexture(GL_TEXTURE_2D, this->cam->getRgbImageTexture());
 	checkOpenGL("bind cam texture");
 
 	

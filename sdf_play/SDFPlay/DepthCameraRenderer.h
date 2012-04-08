@@ -2,28 +2,26 @@
 #define DEPTH_CAMERA_RENDERER_H__
 
 #include "AbstractDepthMap.h"
+#include "AbstractRgbImage.h"
+#include "SdfCvImage.h"
 #include "SdfCvCamera.h"
+#include "SdfCvImageKinect.h"
 #include "Renderable.h"
 
-namespace sdf_play { namespace render {
+class DepthCameraRenderer: public Renderable {
+public:
+	GLhandleARB depthProg;
+	GLint glslDepthTexture;
+	GLint glslColorTexture;
+	GLint glslSurfaceNormal;
 
-	class DepthCameraRenderer: public Renderable {
-	public:
-		GLhandleARB depthProg;
-		GLint glslDepthTexture;
-		GLint glslColorTexture;
-		GLint glslSurfaceNormal;
+	SdfCvImage *cam;
+	AbstractDepthMap *depth;
 
-		SdfCvCamera *cam;
-		AbstractDepthMap *depth;
-
-		~DepthCameraRenderer();
-		virtual void init();
-		virtual void prepareFrame();
-		virtual void render();
-	};
-
-}}
-
+	~DepthCameraRenderer();
+	virtual void init();
+	virtual void prepareFrame();
+	virtual void render();
+};
 
 #endif

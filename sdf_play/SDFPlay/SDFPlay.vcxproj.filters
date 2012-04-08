@@ -51,6 +51,12 @@
     <ClCompile Include="KinectToOpenCV.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SdfCvImage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SdfCvImageKinect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h">
@@ -74,9 +80,6 @@
     <ClInclude Include="Spotlight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\common\teapot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -96,6 +99,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KinectToOpenCV.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfCvImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractRgbImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfCvImageKinect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\Sys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

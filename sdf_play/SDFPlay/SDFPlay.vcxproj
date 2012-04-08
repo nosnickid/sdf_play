@@ -101,6 +101,8 @@
     <ClCompile Include="..\..\3rdparty\oglconsole\oglconsole.c" />
     <ClCompile Include="ManualDepthMap.cpp" />
     <ClCompile Include="SdfCvCamera.cpp" />
+    <ClCompile Include="SdfCvImage.cpp" />
+    <ClCompile Include="SdfCvImageKinect.cpp" />
     <ClCompile Include="sdl_glframebufferext.cpp" />
     <ClCompile Include="sdl_glsl.cpp" />
     <ClCompile Include="Spotlight.cpp" />
@@ -108,7 +110,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h" />
     <ClInclude Include="..\..\common\FpsCamera.h" />
+    <ClInclude Include="..\..\common\Sys.h" />
     <ClInclude Include="AbstractDepthMap.h" />
+    <ClInclude Include="AbstractRgbImage.h" />
     <ClInclude Include="DepthCameraRenderer.h" />
     <ClInclude Include="glext.h" />
     <ClInclude Include="glframebufferext.h" />
@@ -118,8 +122,9 @@
     <ClInclude Include="ManualDepthMap.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="SdfCvCamera.h" />
+    <ClInclude Include="SdfCvImage.h" />
+    <ClInclude Include="SdfCvImageKinect.h" />
     <ClInclude Include="Spotlight.h" />
-    <ClInclude Include="Sys.h" />
     <ClInclude Include="..\..\common\teapot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

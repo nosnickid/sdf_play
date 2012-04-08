@@ -8,8 +8,6 @@
 #include "glext.h"
 #include "Renderable.h"
 
-using namespace sdf_play::render;
-
 class SdfCvCamera: public Renderable {
 protected:
 	void loadTextureFromIpl();	

@@ -9,10 +9,13 @@
 #include "opencv2\imgproc\imgproc.hpp"
 
 
-namespace orangestems { namespace kinect {
-
-
 class KinectToOpenCV {
+private:
+	bool updated[2];
+
+	void pollRGB();
+	void pollDepth();
+
 public:
 
 	IplImage *cvRGBImage;
@@ -30,8 +33,8 @@ public:
 
 	~KinectToOpenCV();
 	void init();
+	bool prepareFrame();
 };
 
-} }
 
 #endif

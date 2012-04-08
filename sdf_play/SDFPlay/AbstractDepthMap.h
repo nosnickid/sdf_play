@@ -3,7 +3,6 @@
 
 #include "Sys.h"
 
-namespace sdf_play { namespace render {
 
 	class AbstractDepthMap {
 	public:
@@ -13,7 +12,5 @@ namespace sdf_play { namespace render {
 		virtual void loadDepthMap() = 0;
 		virtual GLuint getDepthMapTexture() = 0;
 	};
-
-}}
 
 #endif

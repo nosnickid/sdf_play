@@ -29,7 +29,7 @@ GLhandleARB shadowProg;
 Spotlight* spotlight;
 FpsCamera viewCam;
 FpsCamera *activeCam = &viewCam;
-sdf_play::render::DepthCameraRenderer *dc;
+DepthCameraRenderer *dc;
 
 int done = 0;
 
@@ -158,7 +158,7 @@ void drawScene()
 	int previewSize = 100;
 	renderPreviewTexture(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
 	renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
-	renderPreviewTexture(dc->cam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	renderPreviewTexture(dc->cam->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
 	checkOpenGL("render depth preview");
 	
@@ -175,7 +175,7 @@ void drawScene()
 	//drawTriangles(true);
 
 
-	renderPreviewTexture(dc->cam->frameTexture,             previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	 renderPreviewTexture(dc->cam->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
 	checkOpenGL("render lighting scene");
 
@@ -304,9 +304,9 @@ int main(int argc, char *argv[])
 
 	GLfloat xvel = 0, yvel = 0;
 
-	dc = new sdf_play::render::DepthCameraRenderer();
+	dc = new DepthCameraRenderer();
 	dc->init();
-	dc->cam->textureProg = textureProg;
+	// dc->cam->textureProg = textureProg;
    
 	while ( !done ) {
 		while ( SDL_PollEvent(&event) ) {
