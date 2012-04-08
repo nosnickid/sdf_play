@@ -21,12 +21,10 @@ void KinectToOpenCV::init() {
 	this->hEvents[1] =  CreateEvent( NULL, TRUE, FALSE, NULL );
 	this->hStreams[0] = this->hStreams[1] = 0;
 
-	NuiImageStreamOpen( NUI_IMAGE_TYPE::NUI_IMAGE_TYPE_COLOR, NUI_IMAGE_RESOLUTION::NUI_IMAGE_RESOLUTION_640x480, NULL, 2, hEvents[0], &hStreams[0] );
-	NuiImageStreamOpen( NUI_IMAGE_TYPE::NUI_IMAGE_TYPE_DEPTH, NUI_IMAGE_RESOLUTION::NUI_IMAGE_RESOLUTION_320x240, NULL, 2, hEvents[1], &hStreams[1] );
+	NuiInitialize( NUI_INITIALIZE_FLAG_USES_COLOR | NUI_INITIALIZE_FLAG_USES_DEPTH | NUI_INITIALIZE_FLAG_USES_SKELETON );
 
-	//this->hThreads[0] = CreateThread( NULL, 0, RGBImage, (LPVOID*)(this), NULL, NULL);
-	//this->hThreads[1] = CreateThread( NULL, 0, DepthImage, (LPVOID*)(this), NULL, NULL);
-
+	NuiImageStreamOpen( NUI_IMAGE_TYPE::NUI_IMAGE_TYPE_COLOR, NUI_IMAGE_RESOLUTION::NUI_IMAGE_RESOLUTION_640x480, NULL, 2, this->hEvents[0], &this->hStreams[0] );
+	NuiImageStreamOpen( NUI_IMAGE_TYPE::NUI_IMAGE_TYPE_DEPTH, NUI_IMAGE_RESOLUTION::NUI_IMAGE_RESOLUTION_320x240, NULL, 2, this->hEvents[1], &this->hStreams[1] );
 }
 
 KinectToOpenCV::~KinectToOpenCV() {
@@ -47,11 +45,9 @@ bool KinectToOpenCV::prepareFrame() {
 
 
 void KinectToOpenCV::pollRGB() {
-	if (WaitForSingleObject( this->hEvents[0], 0)) {
+	const NUI_IMAGE_FRAME *RGBFrame;
+	if (S_OK == NuiImageStreamGetNextFrame( this->hStreams[0], 0, &RGBFrame )) {
 		//printf( "[+] Got RGB Frame!\n" );
-
-		const NUI_IMAGE_FRAME *RGBFrame;
-		NuiImageStreamGetNextFrame( this->hStreams[0], NULL, &RGBFrame );
 
 		NUI_LOCKED_RECT lockedRGB;
 		RGBFrame->pFrameTexture->LockRect( NULL, &lockedRGB, NULL, NULL );
@@ -67,9 +63,11 @@ void KinectToOpenCV::pollRGB() {
 }
 
 void KinectToOpenCV::pollDepth() {
-	if (WaitForSingleObject( this->hEvents[1], 0)) {
-		const NUI_IMAGE_FRAME *DepthFrame;
-		NuiImageStreamGetNextFrame( this->hStreams[1], NULL, &DepthFrame );
+	updated[1] = true;
+	return;
+
+	const NUI_IMAGE_FRAME *DepthFrame;
+	if (S_OK == NuiImageStreamGetNextFrame( this->hStreams[1], 0, &DepthFrame )) {
 		
 		NUI_LOCKED_RECT lockedDepth;
 		DepthFrame->pFrameTexture->LockRect( NULL, &lockedDepth, NULL, NULL );

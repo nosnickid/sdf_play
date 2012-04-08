@@ -15,7 +15,8 @@ public:
 	GLint glslColorTexture;
 	GLint glslSurfaceNormal;
 
-	SdfCvImage *cam;
+	SdfCvImageKinect *kin;
+	AbstractRgbImage *rgb;
 	AbstractDepthMap *depth;
 
 	~DepthCameraRenderer();

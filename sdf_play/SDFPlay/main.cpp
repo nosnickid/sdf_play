@@ -158,7 +158,7 @@ void drawScene()
 	int previewSize = 100;
 	renderPreviewTexture(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
 	renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
-	renderPreviewTexture(dc->cam->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	renderPreviewTexture(dc->rgb->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
 	checkOpenGL("render depth preview");
 	
@@ -175,7 +175,7 @@ void drawScene()
 	//drawTriangles(true);
 
 
-	 renderPreviewTexture(dc->cam->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	 renderPreviewTexture(dc->rgb->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
 	checkOpenGL("render lighting scene");
 

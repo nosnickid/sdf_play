@@ -26,10 +26,8 @@ public:
 
 	RGBQUAD	*RGBDepth;
 
-	HANDLE hThreads[2];
 	HANDLE hEvents[2];
 	HANDLE hStreams[2];
-
 
 	~KinectToOpenCV();
 	void init();

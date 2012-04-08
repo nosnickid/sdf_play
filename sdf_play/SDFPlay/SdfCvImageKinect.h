@@ -12,10 +12,10 @@ protected:
 	KinectToOpenCV *kinToCv;
 
 public:
-	virtual void init();
-	virtual void prepareFrame();
+	void init();
+	void prepareFrame();
 
-	virtual void loadRgbImage();
+	void loadRgbImage();
 
 };
 
