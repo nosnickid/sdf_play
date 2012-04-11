@@ -10,7 +10,8 @@ RGBQUAD Nui_ShortToQuad( unsigned short s );
 
 void KinectToOpenCV::init() {
 	this->cvRGBImage = cvCreateImage( cvSize( 640, 480 ), IPL_DEPTH_8U, 4 );
-	this->cvDepthImage = cvCreateImage( cvSize( 320, 240 ), IPL_DEPTH_8U, 4 );
+	// this->cvDepthImage = cvCreateImage( cvSize( 320, 240 ), IPL_DEPTH_8U, 4 );
+	this->cvDepthImage = cvCreateImage( cvSize( 320, 240 ), IPL_DEPTH_16U, 1 );
 	this->DepthEdges = cvCreateImage( cvSize( 320, 240 ), IPL_DEPTH_8U, 1 );
 
 	this->DepthEdges2 = cvCreateImage( cvSize( 320, 240 ), IPL_DEPTH_8U, 1 );
@@ -63,9 +64,6 @@ void KinectToOpenCV::pollRGB() {
 }
 
 void KinectToOpenCV::pollDepth() {
-	updated[1] = true;
-	return;
-
 	const NUI_IMAGE_FRAME *DepthFrame;
 	if (S_OK == NuiImageStreamGetNextFrame( this->hStreams[1], 0, &DepthFrame )) {
 		
@@ -73,7 +71,9 @@ void KinectToOpenCV::pollDepth() {
 		DepthFrame->pFrameTexture->LockRect( NULL, &lockedDepth, NULL, NULL );
 		
 		unsigned char* Buffer = (unsigned char*) lockedDepth.pBits;
-		
+
+		cvSetData( this->cvDepthImage, (unsigned char*)lockedDepth.pBits, lockedDepth.Pitch );
+/*		
 		RGBQUAD* rgbLoop =  this->RGBDepth;
 		unsigned short* BufferLoop = (unsigned short*) Buffer;
 
@@ -94,7 +94,7 @@ void KinectToOpenCV::pollDepth() {
 		//cvCanny(  DepthEdges, DepthEdges2, 100, 100, 3 );
 		
 		// cvShowImage( "Depth",  ko->cvDepthImage );
-		// if ( cvWaitKey( 1 ) == 'x' ){ break; }
+		// if ( cvWaitKey( 1 ) == 'x' ){ break; }*/
 
 		NuiImageStreamReleaseFrame( this->hStreams[1], DepthFrame );
 

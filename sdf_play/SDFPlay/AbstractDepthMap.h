@@ -3,7 +3,6 @@
 
 #include "Sys.h"
 
-
 class AbstractDepthMap {
 public:
 	/**

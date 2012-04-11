@@ -6,13 +6,15 @@
 #include "opencv/highgui.h"
 #include "Sys.h"
 #include "glext.h"
+#include "AbstractDepthMap.h"
 #include "AbstractRgbImage.h"
 #include "Renderable.h"
 
-class SdfCvImage: public virtual Renderable, public virtual AbstractRgbImage {
+class SdfCvImage: public virtual Renderable, public virtual AbstractRgbImage, public virtual AbstractDepthMap {
 public:
 
-	GLuint frameTexture;
+	GLuint rgbTexture;
+	GLuint depthTexture;
 
 	virtual void init();
 	virtual void prepareFrame() = 0;
@@ -21,7 +23,11 @@ public:
 	virtual void loadRgbImage() = 0;
 	virtual GLuint getRgbImageTexture();
 
-	void createTextureForFrame();
+	virtual void loadDepthMap() = 0;
+	virtual GLuint getDepthMapTexture();
+
+	void createTextureForRgb();
+	void createTextureForDepth();
 
 };
 

@@ -14,8 +14,10 @@ void DepthCameraRenderer::init() {
 
 	this->rgb = (AbstractRgbImage *) this->kin;
 
-	this->depth = new ManualDepthMap();
-	this->depth->loadDepthMap();
+	this->depth = (AbstractDepthMap *) this->kin;
+
+	//this->depth = new ManualDepthMap();
+	//this->depth->loadDepthMap();
 
 
 	const GLcharARB *tprogVert = "\
@@ -25,13 +27,15 @@ void DepthCameraRenderer::init() {
 		void main() { \
 			texcoord = vec2(gl_MultiTexCoord0); \
 		    gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex);\
-			gl_Position += (30 * surfaceNormal * (texture2D(depthTexture, texcoord)[0]));\
+			vec4 depth = texture2D(depthTexture, texcoord);\
+			gl_Position += (100 * surfaceNormal * (depth.x));\
 		}";
 	const GLcharARB *tprogFrag = "\
 		varying vec2 texcoord; \
 		uniform sampler2D camTexture; \
+		uniform sampler2D depthTexture; \
 		void main() { \
-			gl_FragColor = texture2D(camTexture, texcoord);\
+			gl_FragColor = texture2D(depthTexture, texcoord);\
 		}";
 	this->depthProg = createShaderFromProgs(tprogVert, tprogFrag);
 	glUseProgramObjectARB(this->depthProg);

@@ -16,6 +16,7 @@ public:
 	void prepareFrame();
 
 	void loadRgbImage();
+	void loadDepthMap();
 
 };
 

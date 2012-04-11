@@ -155,7 +155,7 @@ void drawScene()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	int previewSize = 100;
+	int previewSize = 250;
 	renderPreviewTexture(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
 	renderPreviewTexture(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
 	renderPreviewTexture(dc->rgb->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
@@ -174,8 +174,7 @@ void drawScene()
 
 	//drawTriangles(true);
 
-
-	 renderPreviewTexture(dc->rgb->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	 // renderPreviewTexture(dc->rgb->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
 	checkOpenGL("render lighting scene");
 
