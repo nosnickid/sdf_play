@@ -9,12 +9,15 @@ DepthCameraRenderer::~DepthCameraRenderer() {
 
 void DepthCameraRenderer::init() {
 	//this->cam = new SdfCvCamera();
-	this->kin = new SdfCvImageKinect();
-	this->kin->init();
+	if (SdfCvImageKinect::IsKinectPresent()) {
+		this->kin = new SdfCvImageKinect();
+		this->kin->init();
 
-	this->rgb = (AbstractRgbImage *) this->kin;
-
-	this->depth = (AbstractDepthMap *) this->kin;
+		this->rgb = dynamic_cast<AbstractRgbImage*> (this->kin);
+		this->depth = dynamic_cast<AbstractDepthMap*> (this->kin);
+	} else {
+		this->rgb = dynamic_cast<AbstractRgbImage*> new SdfCvCamera();
+	}
 
 	//this->depth = new ManualDepthMap();
 	//this->depth->loadDepthMap();
@@ -114,30 +117,3 @@ void DepthCameraRenderer::render() {
 	glActiveTextureARB(GL_TEXTURE0);
 
 }
-
-/*
-			// 0
-			glTexCoord2d(ti, tj); 
-			glVertex3i(i, 0, j);
-
-			// 1
-			glTexCoord2d(ti, tj + tjstep); 
-			glVertex3i(i+s, 0, j);
-
-			// 2
-			glTexCoord2d(ti + tistep, tj + tjstep);
-			glVertex3i(i+s, 0, j+s);
-
-			// 2
-			glTexCoord2d(ti + tistep, tj + tjstep);
-			glVertex3i(i+s, 0, j+s);
-
-			// 3
-			glTexCoord2d(ti + tistep, tj); 
-			glVertex3i(i, 0, j+s);
-
-			// 0
-			glTexCoord2d(ti, tj); 
-			glVertex3i(i, 0, j);
-
-*/

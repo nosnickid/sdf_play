@@ -9,6 +9,7 @@
 #    include <windows.h>
 #    include <GL/gl.h>
 #    include <GL/glu.h>
+#    include "glext.h"
 #  else
 #    include <GL/gl.h>
 #    include <GL/glu.h>

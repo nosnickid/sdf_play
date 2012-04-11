@@ -3,12 +3,11 @@
 
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include "glext.h"
+#include "Sys.h"
 #include "Renderable.h"
+#include "AbstractRgbImage.h"
 
-class SdfCvCamera: public Renderable {
+class SdfCvCamera: public Renderable, public virtual AbstractRgbImage {
 protected:
 	void loadTextureFromIpl();	
 public:
