@@ -374,8 +374,8 @@ int main(int argc, char *argv[])
 	delete dc;
 	OGLCONSOLE_Destroy(console);
 	SDL_Quit();
-	    
 
-	return 0;   
+
+	return 0;
 }
 

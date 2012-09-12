@@ -4,24 +4,29 @@
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
 #include "Sys.h"
-#include "Renderable.h"
-#include "AbstractRgbImage.h"
+#include "SdfCvImage.h"
 
-class SdfCvCamera: public Renderable, public virtual AbstractRgbImage {
+class SdfCvCamera: public virtual SdfCvImage {
 protected:
-	void loadTextureFromIpl();	
+	AbstractDepthMap *depthMap;
+	GLuint frameTexture;
+
+	void loadTextureFromIpl();
 public:
 	CvCapture* camera;
 	IplImage* frame;
-	GLuint frameTexture;
 	GLhandleARB textureProg;
 
-	SdfCvCamera();
+	SdfCvCamera(AbstractDepthMap *depthMap);
 	~SdfCvCamera();
 	void init();
 	virtual void prepareFrame();
 	virtual void render();
 	void createTextureForFrame();
+
+	virtual GLuint getRgbImageTexture();
+
+	virtual GLuint getDepthMapTexture();
 	
 };
 

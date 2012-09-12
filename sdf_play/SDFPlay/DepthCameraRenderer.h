@@ -15,7 +15,7 @@ public:
 	GLint glslColorTexture;
 	GLint glslSurfaceNormal;
 
-	SdfCvImageKinect *kin;
+	SdfCvImage *image;
 	AbstractRgbImage *rgb;
 	AbstractDepthMap *depth;
 

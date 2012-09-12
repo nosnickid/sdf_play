@@ -5,7 +5,6 @@
 #pragma comment(lib, "opencv_imgproc231.lib")
 #pragma comment(lib, "opencv_highgui231.lib")
 
-
 RGBQUAD Nui_ShortToQuad( unsigned short s );
 
 void KinectToOpenCV::init() {

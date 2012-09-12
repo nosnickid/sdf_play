@@ -20,10 +20,8 @@ public:
 	virtual void prepareFrame() = 0;
 	virtual void render();
 
-	virtual void loadRgbImage() = 0;
 	virtual GLuint getRgbImageTexture();
 
-	virtual void loadDepthMap() = 0;
 	virtual GLuint getDepthMapTexture();
 
 	void createTextureForRgb();

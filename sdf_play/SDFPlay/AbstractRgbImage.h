@@ -8,7 +8,6 @@ public:
 	/**
 		* Load a depth map into the texture
 		*/
-	virtual void loadRgbImage() = 0;
 	virtual GLuint getRgbImageTexture() = 0;
 };
 

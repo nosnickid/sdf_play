@@ -12,9 +12,11 @@ void ManualDepthMap::loadDepthMap() {
 	const int h = 240;
 	GLubyte map[w*h];
 	
-	for(int x = 0; x < w; x++) {
-		for(int y = 0; y < h; y++) {
-			map[(y*w)+(x)] = (GLubyte)(256 * (sin(2 * M_PI * x/w) + cos(2 * M_PI * y/w)));
+	
+	for(int y = 0; y < h; y++) {
+		for(int x = 0; x < w; x++) {
+			// map[(y*w)+(x)] = (GLubyte)(256 * (sin(2 * M_PI * x/w) + cos(2 * M_PI * y/w)));
+			map[(y*w)+(x)] = 0;
 		}
 	}
 	

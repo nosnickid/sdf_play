@@ -3,25 +3,26 @@
 #include "glsl.h"
 
 DepthCameraRenderer::~DepthCameraRenderer() {
-	delete this->kin;
+	delete this->image;
 	// delete this->depth;
 }
 
 void DepthCameraRenderer::init() {
-	//this->cam = new SdfCvCamera();
 	if (SdfCvImageKinect::IsKinectPresent()) {
-		this->kin = new SdfCvImageKinect();
-		this->kin->init();
+		this->image = new SdfCvImageKinect();
+		this->image->init();
 
-		this->rgb = dynamic_cast<AbstractRgbImage*> (this->kin);
-		this->depth = dynamic_cast<AbstractDepthMap*> (this->kin);
+		this->rgb = dynamic_cast<AbstractRgbImage*> (this->image);
+		this->depth = dynamic_cast<AbstractDepthMap*> (this->image);
 	} else {
-		this->rgb = dynamic_cast<AbstractRgbImage*> new SdfCvCamera();
+		this->depth = new ManualDepthMap();
+		(dynamic_cast<ManualDepthMap*> (this->depth))->loadDepthMap();
+
+		this->image = new SdfCvCamera(this->depth);
+		this->image->init();
+
+		this->rgb = dynamic_cast<AbstractRgbImage*> (this->image);
 	}
-
-	//this->depth = new ManualDepthMap();
-	//this->depth->loadDepthMap();
-
 
 	const GLcharARB *tprogVert = "\
 		varying vec2 texcoord; \
@@ -38,7 +39,7 @@ void DepthCameraRenderer::init() {
 		uniform sampler2D camTexture; \
 		uniform sampler2D depthTexture; \
 		void main() { \
-			gl_FragColor = texture2D(depthTexture, texcoord);\
+			gl_FragColor = texture2D(camTexture, texcoord);\
 		}";
 	this->depthProg = createShaderFromProgs(tprogVert, tprogFrag);
 	glUseProgramObjectARB(this->depthProg);
@@ -58,7 +59,9 @@ void DepthCameraRenderer::init() {
 }
 
 void DepthCameraRenderer::prepareFrame() {
-	this->kin->prepareFrame();
+	if (this->image != NULL) {
+		this->image->prepareFrame();
+	}
 }
 
 void DepthCameraRenderer::render() {	

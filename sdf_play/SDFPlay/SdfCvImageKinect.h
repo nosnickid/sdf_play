@@ -18,6 +18,10 @@ public:
 	void loadRgbImage();
 	void loadDepthMap();
 
+	static bool IsKinectPresent() {
+		return false;
+	}
+
 };
 
 

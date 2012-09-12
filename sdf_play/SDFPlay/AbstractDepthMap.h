@@ -6,9 +6,8 @@
 class AbstractDepthMap {
 public:
 	/**
-		* Load a depth map into the texture
-		*/
-	virtual void loadDepthMap() = 0;
+	 * Load a depth map into the texture
+	*/
 	virtual GLuint getDepthMapTexture() = 0;
 };
 

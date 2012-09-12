@@ -4,8 +4,8 @@
 #include "Sys.h"
 #include "glsl.h"
 
-SdfCvCamera::SdfCvCamera() :
- frame(NULL), frameTexture(0), camera(NULL) {
+SdfCvCamera::SdfCvCamera(AbstractDepthMap *depth) :
+ frame(NULL), frameTexture(0), camera(NULL), depthMap(depth) {
 }
 
 
@@ -19,6 +19,7 @@ void SdfCvCamera::init() {
 	if (!this->camera) {
 		warning("SdfCvCamera::SdfCvCamera: failed to capture camera: %d", cvGetErrStatus());
 	} else {
+		info("Loaded camera!");
 		this->createTextureForFrame();
 		cvSetCaptureProperty(this->camera, CV_CAP_PROP_FRAME_WIDTH, 320);
 		cvSetCaptureProperty(this->camera, CV_CAP_PROP_FRAME_HEIGHT, 240 );
@@ -27,7 +28,7 @@ void SdfCvCamera::init() {
 
 void SdfCvCamera::createTextureForFrame() {
 	glGenTextures(1, &this->frameTexture);
-	glBindTexture( GL_TEXTURE_2D, this->frameTexture ); //bind the texture to it's array
+	glBindTexture( GL_TEXTURE_2D, this->frameTexture ); 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
  
@@ -38,7 +39,7 @@ void SdfCvCamera::loadTextureFromIpl() {
 
 	if (this->frame == NULL) return;
 
-	glBindTexture( GL_TEXTURE_2D, this->frameTexture); //bind the texture to it's array
+	glBindTexture( GL_TEXTURE_2D, this->frameTexture);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->frame->width, this->frame->height, 0, GL_BGR, GL_UNSIGNED_BYTE, this->frame->imageData);
 
@@ -56,7 +57,14 @@ void SdfCvCamera::prepareFrame() {
 		// cvReleaseImage(&this->frame);
 		// this->frame = NULL;
 	}
+}
 
+GLuint SdfCvCamera::getRgbImageTexture() {
+	return this->frameTexture;
+}
+
+GLuint SdfCvCamera::getDepthMapTexture() {
+	return this->depthMap->getDepthMapTexture();
 }
 
 void SdfCvCamera::render() {
