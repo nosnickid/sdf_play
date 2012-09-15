@@ -58,7 +58,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -101,12 +101,16 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\..\3rdparty\oglconsole\oglconsole.c" />
     <ClCompile Include="ManualDepthMap.cpp" />
+    <ClCompile Include="QrCodeParser.cpp" />
     <ClCompile Include="SdfCvCamera.cpp" />
     <ClCompile Include="SdfCvImage.cpp" />
     <ClCompile Include="SdfCvImageKinect.cpp" />
+    <ClCompile Include="SdfPlayApp.cpp" />
     <ClCompile Include="sdl_glframebufferext.cpp" />
     <ClCompile Include="sdl_glsl.cpp" />
     <ClCompile Include="Spotlight.cpp" />
+    <ClCompile Include="TeapotShadowScene.cpp" />
+    <ClCompile Include="TextureDebugRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h" />
@@ -121,12 +125,16 @@
     <ClInclude Include="..\..\3rdparty\oglconsole\oglconsole.h" />
     <ClInclude Include="KinectToOpenCV.h" />
     <ClInclude Include="ManualDepthMap.h" />
+    <ClInclude Include="QrCodeParser.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="SdfCvCamera.h" />
     <ClInclude Include="SdfCvImage.h" />
     <ClInclude Include="SdfCvImageKinect.h" />
+    <ClInclude Include="SdfPlayApp.h" />
     <ClInclude Include="Spotlight.h" />
     <ClInclude Include="..\..\common\teapot.h" />
+    <ClInclude Include="TeapotShadowScene.h" />
+    <ClInclude Include="TextureDebugRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

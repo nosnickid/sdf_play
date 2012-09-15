@@ -3,8 +3,9 @@
 #include "glsl.h"
 
 DepthCameraRenderer::~DepthCameraRenderer() {
-	delete this->image;
-	// delete this->depth;
+	// this is segfaulting. new / delete fubary with the linked opencv? 
+	// not deleting means i don't have to debug it anyway, AAHHEEMM...
+	// delete this->image;
 }
 
 void DepthCameraRenderer::init() {

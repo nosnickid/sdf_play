@@ -13,15 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{aa0512e4-aa1a-4a85-9c51-ae17e536c4a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\View">
+      <UniqueIdentifier>{61767cdf-3768-4de7-be3a-d52c24b21c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Imaging">
+      <UniqueIdentifier>{2eb540b2-5d1d-47ab-9805-90a6a0f2373c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Imaging">
+      <UniqueIdentifier>{3da519f6-4f56-491b-b757-2c92d8f0aaae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{e1e03930-f1b4-4f7d-97de-08c0b1d92a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\View">
+      <UniqueIdentifier>{77ee40bc-f205-4d49-be1a-a46164b874e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\common\Debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\FpsCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="glsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
@@ -30,88 +42,118 @@
     <ClCompile Include="..\..\3rdparty\oglconsole\oglconsole.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sdl_glframebufferext.cpp">
+    <ClCompile Include="SdfPlayApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sdl_glsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Spotlight.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SdfCvCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ManualDepthMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DepthCameraRender.cpp">
+    <ClCompile Include="QrCodeParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KinectToOpenCV.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Imaging</Filter>
     </ClCompile>
-    <ClCompile Include="SdfCvImage.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ManualDepthMap.cpp">
+      <Filter>Source Files\Imaging</Filter>
+    </ClCompile>
+    <ClCompile Include="SdfCvCamera.cpp">
+      <Filter>Source Files\Imaging</Filter>
     </ClCompile>
     <ClCompile Include="SdfCvImageKinect.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Imaging</Filter>
+    </ClCompile>
+    <ClCompile Include="SdfCvImage.cpp">
+      <Filter>Source Files\Imaging</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthCameraRender.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="glsl.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl_glframebufferext.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl_glsl.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Spotlight.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="TeapotShadowScene.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureDebugRenderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\FpsCamera.cpp">
+      <Filter>Source Files\View</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\FpsCamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="glframebufferext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="glsl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\3rdparty\oglconsole\oglconsole.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spotlight.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\teapot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SdfCvCamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractDepthMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ManualDepthMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthCameraRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KinectToOpenCV.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SdfCvImage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractRgbImage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SdfCvImageKinect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\Sys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="glext.h">
+    <ClInclude Include="QrCodeParser.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfPlayApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureDebugRenderer.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\teapot.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\FpsCamera.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractDepthMap.h">
+      <Filter>Header Files\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractRgbImage.h">
+      <Filter>Header Files\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthCameraRenderer.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="glext.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="glsl.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="glframebufferext.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="KinectToOpenCV.h">
+      <Filter>Header Files\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfCvCamera.h">
+      <Filter>Header Files\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfCvImage.h">
+      <Filter>Header Files\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfCvImageKinect.h">
+      <Filter>Header Files\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="Spotlight.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ManualDepthMap.h">
+      <Filter>Header Files\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h">
+      <Filter>Header Files\Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="TeapotShadowScene.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
