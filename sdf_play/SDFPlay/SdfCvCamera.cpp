@@ -5,24 +5,25 @@
 #include "glsl.h"
 
 SdfCvCamera::SdfCvCamera(AbstractDepthMap *depth) :
- frame(NULL), frameTexture(0), camera(NULL), depthMap(depth) {
+	frameTexture(0), depthMap(depth) {
 }
 
 
 SdfCvCamera::~SdfCvCamera() {
-	if (this->camera != NULL) cvReleaseCapture(&this->camera);
-	// if (this->frame != NULL) cvReleaseImage(&this->frame);
+	if (this->videoCapture.isOpened()) this->videoCapture.release();
+	if (this->frameTexture > 0) glDeleteTextures(1, &this->frameTexture);
 }
 
 void SdfCvCamera::init() {
-	this->camera = cvCaptureFromCAM(CV_CAP_ANY);
-	if (!this->camera) {
+	this->videoCapture = cv::VideoCapture(CV_CAP_ANY);
+
+	if (!this->videoCapture.isOpened()) {
 		warning("SdfCvCamera::SdfCvCamera: failed to capture camera: %d", cvGetErrStatus());
 	} else {
 		info("Loaded camera!");
 		this->createTextureForFrame();
-		cvSetCaptureProperty(this->camera, CV_CAP_PROP_FRAME_WIDTH, 320);
-		cvSetCaptureProperty(this->camera, CV_CAP_PROP_FRAME_HEIGHT, 240 );
+		this->videoCapture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+		this->videoCapture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 	}
 }
 
@@ -37,25 +38,21 @@ void SdfCvCamera::createTextureForFrame() {
 
 void SdfCvCamera::loadTextureFromIpl() {
 
-	if (this->frame == NULL) return;
-
 	glBindTexture( GL_TEXTURE_2D, this->frameTexture);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->frame->width, this->frame->height, 0, GL_BGR, GL_UNSIGNED_BYTE, this->frame->imageData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->vidFrame.cols, this->vidFrame.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, this->vidFrame.data);
 
-    checkOpenGL("Image data from cap to texture");	
+	checkOpenGL("Image data from cap to texture");	
 }
 
 void SdfCvCamera::prepareFrame() {
-	if (this->camera) {
-		this->frame = cvQueryFrame(this->camera);
+	if (this->videoCapture.isOpened()) {
+		this->videoCapture >> vidFrame;
 
 		if (this->frameTexture > 0) {
 			this->loadTextureFromIpl();
 		}
 
-		// cvReleaseImage(&this->frame);
-		// this->frame = NULL;
 	}
 }
 

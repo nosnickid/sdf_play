@@ -242,6 +242,8 @@ void SdfPlayApp::drawScene()
 
 	// textureDebug->render(dc->rgb->getRgbImageTexture(),             previewSize * 2, 600 - previewSize, previewSize, previewSize);
 
+	// this->qrCodeParser->parseOpenCvImage(dynamic_cast<SdfCvCamera*>(dc->image)->frame);
+
 	checkOpenGL("render lighting scene");
 
 	dc->render();

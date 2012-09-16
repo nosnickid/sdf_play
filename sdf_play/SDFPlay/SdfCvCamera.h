@@ -1,9 +1,9 @@
 #ifndef SDF_CV_CAMERA_H__
 #define SDF_CV_CAMERA_H__
 
-#include "opencv/cv.h"
-#include "opencv/highgui.h"
 #include "Sys.h"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 #include "SdfCvImage.h"
 
 class SdfCvCamera: public virtual SdfCvImage {
@@ -11,18 +11,16 @@ protected:
 	AbstractDepthMap *depthMap;
 	GLuint frameTexture;
 
-	void loadTextureFromIpl();
+	void createTextureForFrame();
 public:
-	CvCapture* camera;
-	IplImage* frame;
-	GLhandleARB textureProg;
+	cv::VideoCapture videoCapture;
+	cv::Mat vidFrame;
 
 	SdfCvCamera(AbstractDepthMap *depthMap);
 	~SdfCvCamera();
 	void init();
 	virtual void prepareFrame();
-	virtual void render();
-	void createTextureForFrame();
+	void loadTextureFromIpl();
 
 	virtual GLuint getRgbImageTexture();
 
