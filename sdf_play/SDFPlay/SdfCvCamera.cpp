@@ -66,7 +66,3 @@ GLuint SdfCvCamera::getRgbImageTexture() {
 GLuint SdfCvCamera::getDepthMapTexture() {
 	return this->depthMap->getDepthMapTexture();
 }
-
-void SdfCvCamera::render() {
-
-}

@@ -10,7 +10,7 @@
 #include "AbstractRgbImage.h"
 #include "Renderable.h"
 
-class SdfCvImage: public virtual Renderable, public virtual AbstractRgbImage, public virtual AbstractDepthMap {
+class SdfCvImage: public virtual AbstractRgbImage, public virtual AbstractDepthMap {
 public:
 
 	GLuint rgbTexture;
@@ -18,7 +18,6 @@ public:
 
 	virtual void init();
 	virtual void prepareFrame() = 0;
-	virtual void render();
 
 	virtual GLuint getRgbImageTexture();
 

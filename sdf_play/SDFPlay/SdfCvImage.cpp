@@ -5,9 +5,6 @@ void SdfCvImage::init() {
 	this->createTextureForDepth();
 }
 
-void SdfCvImage::render() {
-}
-
 GLuint SdfCvImage::getRgbImageTexture() {
 	return this->rgbTexture;
 }
