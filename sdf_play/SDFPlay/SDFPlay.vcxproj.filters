@@ -87,6 +87,9 @@
     <ClCompile Include="..\..\common\FpsCamera.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
+    <ClCompile Include="Gl2dRender.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files\Imaging</Filter>
     </ClInclude>
     <ClInclude Include="TeapotShadowScene.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Gl2dRender.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>

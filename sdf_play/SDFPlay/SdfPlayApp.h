@@ -11,7 +11,7 @@
 #include "teapot.h"
 #include "DepthCameraRenderer.h"
 #include "QrCodeParser.h"
-#include "TextureDebugRenderer.h"
+#include "Gl2dRender.h"
 
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
@@ -21,16 +21,16 @@ protected:
 	void initSdlGl(void);
 	void initConsole(void);
 	void initGlSlPrograms(void);
-	void initTextureDebug();
 	void initSpotlight(void);
 	void initDepthCamera(void);
 
 	void render();
 	void drawScene();
 
-	TextureDebugRenderer *textureDebug;
-
 	bool done;
+	bool doQrParse;
+
+	Gl2dRender *gl2d;
 
 public:
 	SDL_Surface *screen;

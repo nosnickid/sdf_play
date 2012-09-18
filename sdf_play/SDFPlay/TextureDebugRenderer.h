@@ -14,7 +14,8 @@ protected:
 
 public:
 	TextureDebugRenderer();
-	void render(GLuint texture, int x, int y, int w, int h);
+	void renderMathsy(GLuint texture, int x, int y, int w, int h);
+	void renderMemory(GLuint texture, int x, int y, int w, int h);
 };
 
 

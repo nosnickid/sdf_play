@@ -67,10 +67,6 @@ void SdfPlayApp::initGlSlPrograms(void) {
 	glUseProgramObjectARB(0);
 }
 
-void SdfPlayApp::initTextureDebug(void) {
-	textureDebug = new TextureDebugRenderer();
-}
-
 void SdfPlayApp::initConsole(void) {
 	console = OGLCONSOLE_Create();
 	OGLCONSOLE_EnterKey(cmdCb);
@@ -90,18 +86,17 @@ void SdfPlayApp::initSpotlight(void) {
 void SdfPlayApp::initDepthCamera(void) {
 	this->dc = new DepthCameraRenderer();
 	this->dc->init();
-	// dc->cam->textureProg = textureProg;
-
-	this->qrCodeParser = new QrCodeParser();
 }
 
 void SdfPlayApp::init(void) {
 	this->initSdlGl();
 	this->initConsole();
 	this->initGlSlPrograms();
-	this->initTextureDebug();
 	this->initSpotlight();
 	this->initDepthCamera();
+
+	this->qrCodeParser = new QrCodeParser();
+	this->gl2d = new Gl2dRender();
 }
 
 void SdfPlayApp::run(void) {
@@ -212,20 +207,13 @@ void SdfPlayApp::drawScene()
 	*/
 	dc->prepareFrame();
 
-	// draw the straight light texture ortho so we can easily debug it
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	//gluOrtho2D(0, 800, 0, 900);
-	glOrtho(0, 800, 0, 600, -1, 1);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	int previewSize = 250;
-	textureDebug->render(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize);
-	// textureDebug->render(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
-	textureDebug->render(dc->rgb->getRgbImageTexture(),    previewSize * 2, 600 - previewSize, previewSize, previewSize);
+	//this->gl2d->drawTexturePreview(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize, winding_mathsy);
+	// this->gl2d->drawTexturePreview(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
+	// this->gl2d->drawTexturePreview(dc->rgb->getRgbImageTexture(),    previewSize * 2, 600 - previewSize, previewSize, previewSize, winding_memory);
+	this->gl2d->drawTexturePreview(dc->rgb->getRgbImageTexture(),    0, 600 - 240, 320, 240, winding_memory);
+
+	this->gl2d->render();
 
 	checkOpenGL("render depth preview");
 

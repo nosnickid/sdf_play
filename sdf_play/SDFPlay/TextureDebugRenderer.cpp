@@ -20,7 +20,7 @@ TextureDebugRenderer::TextureDebugRenderer() {
 	checkOpenGL("texture prog");
 }
 
-void TextureDebugRenderer::render(GLuint texture, int x, int y, int w, int h) {
+void TextureDebugRenderer::renderMathsy(GLuint texture, int x, int y, int w, int h) {
 	glUseProgramObjectARB(textureProg);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBegin(GL_QUADS);
@@ -28,5 +28,16 @@ void TextureDebugRenderer::render(GLuint texture, int x, int y, int w, int h) {
 	glTexCoord2d(1, 0); glVertex2i(x+w, y);
 	glTexCoord2d(1, 1); glVertex2i(x+w, y+h);
 	glTexCoord2d(0, 1); glVertex2i(x, y+h);
+	glEnd();
+}
+
+void TextureDebugRenderer::renderMemory(GLuint texture, int x, int y, int w, int h) {
+	glUseProgramObjectARB(textureProg);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glBegin(GL_QUADS);
+	glTexCoord2d(0, 1); glVertex2i(x, y);
+	glTexCoord2d(1, 1); glVertex2i(x+w, y);
+	glTexCoord2d(1, 0); glVertex2i(x+w, y+h);
+	glTexCoord2d(0, 0); glVertex2i(x, y+h);
 	glEnd();
 }
