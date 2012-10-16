@@ -100,8 +100,6 @@ void SdfPlayApp::init(void) {
 }
 
 void SdfPlayApp::run(void) {
-	SDL_Event event;
-
 	atexit(SDL_Quit);
 
 	SDL_WM_GrabInput(SDL_GRAB_ON);
@@ -110,70 +108,20 @@ void SdfPlayApp::run(void) {
 	Uint32 time = SDL_GetTicks();
 	Uint32 last = time;
 
-	GLfloat xvel = 0, yvel = 0;
+	cameraVelocity[0] = cameraVelocity[1] = 0;
 
 	debug("SdfPlayApp::run");
-
+	
 	this->done  = false;
 
    
 	while ( !this->done ) {
-		while ( SDL_PollEvent(&event) ) {
-			if (OGLCONSOLE_SDLEvent(&event) == 0) 
-			{
-				switch( event.type ) 
-				{
-					case SDL_MOUSEMOTION:
-						activeCam->RotateBy(event.motion.xrel, event.motion.yrel);
-						break;
-					case SDL_MOUSEBUTTONDOWN:
-						printf("Mouse button %d pressed at (%d,%d)\n",
-							   event.button.button, event.button.x, event.button.y);
-						break;
-					case SDL_KEYDOWN:
-						switch(event.key.keysym.sym) 
-						{
-						case SDLK_ESCAPE:
-							SDL_Event qe;
-							qe.quit.type = SDL_QUIT;
-							SDL_PushEvent(&qe);
-							break;
-						case SDLK_h:  yvel = -50; break;
-						case SDLK_k:  yvel = 50; break;
-						case SDLK_u:  xvel = 50; break;
-						case SDLK_j:  xvel = -50; break;
-						case SDLK_y:  if (activeCam == &viewCam) { activeCam = &spotlight->position; } else { activeCam = &viewCam; } 
-							break;
-						case SDLK_i: OGLCONSOLE_SetVisibility(1); break;
-						default:
-							// ignore
-							break;
-						}
-						break;
-					case SDL_KEYUP:
-						switch(event.key.keysym.sym)
-						{
-						case SDLK_h:  yvel = 0; break;
-						case SDLK_k:  yvel = 0; break;
-						case SDLK_u:  xvel = 0; break;
-						case SDLK_j:  xvel = 0; break;
-						default: // not bovvvered. 
-							break;
-						}
-						break;
-					case SDL_QUIT:
-						this->done = true;
-						break;
-					default:
-						break;
-				}
-			}
-		}
+		this->handleSdlEventLoop();
 		time = SDL_GetTicks();
 		if (time - last > 50) 
 		{
 			last = time;
-			activeCam->MoveOnRelXY(xvel / 15.0f, yvel / 15.0f);
+			activeCam->MoveOnRelXY(cameraVelocity[0] / 15.0f, cameraVelocity[1] / 15.0f);
 		}
 
 		render();
@@ -184,6 +132,62 @@ void SdfPlayApp::run(void) {
 	OGLCONSOLE_Destroy(console);
 	SDL_Quit();
 
+}
+
+void SdfPlayApp::handleSdlEventLoop(void) {
+	SDL_Event event;
+
+	while ( SDL_PollEvent(&event) ) {
+		if (OGLCONSOLE_SDLEvent(&event) == 0) 
+		{
+			switch( event.type ) 
+			{
+				case SDL_MOUSEMOTION:
+					activeCam->RotateBy(event.motion.xrel, event.motion.yrel);
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					printf("Mouse button %d pressed at (%d,%d)\n",
+							event.button.button, event.button.x, event.button.y);
+					break;
+				case SDL_KEYDOWN:
+					switch(event.key.keysym.sym) 
+					{
+					case SDLK_ESCAPE:
+						SDL_Event qe;
+						qe.quit.type = SDL_QUIT;
+						SDL_PushEvent(&qe);
+						break;
+					case SDLK_h:  cameraVelocity[1] = -50; break;
+					case SDLK_k:  cameraVelocity[1] = 50; break;
+					case SDLK_u:  cameraVelocity[0] = 50; break;
+					case SDLK_j:  cameraVelocity[0] = -50; break;
+					case SDLK_y:  if (activeCam == &viewCam) { activeCam = &spotlight->position; } else { activeCam = &viewCam; } 
+						break;
+					case SDLK_i: OGLCONSOLE_SetVisibility(1); break;
+					default:
+						// ignore
+						break;
+					}
+					break;
+				case SDL_KEYUP:
+					switch(event.key.keysym.sym)
+					{
+					case SDLK_h:  cameraVelocity[1] = 0; break;
+					case SDLK_k:  cameraVelocity[1] = 0; break;
+					case SDLK_u:  cameraVelocity[0] = 0; break;
+					case SDLK_j:  cameraVelocity[0] = 0; break;
+					default: // not bovvvered. 
+						break;
+					}
+					break;
+				case SDL_QUIT:
+					this->done = true;
+					break;
+				default:
+					break;
+			}
+		}
+	}
 }
 
 void SdfPlayApp::render(void) {

@@ -24,8 +24,11 @@ protected:
 	void initSpotlight(void);
 	void initDepthCamera(void);
 
+	void handleSdlEventLoop();
 	void render();
 	void drawScene();
+
+	float cameraVelocity[2];
 
 	bool done;
 	bool doQrParse;
