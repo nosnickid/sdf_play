@@ -1,9 +1,8 @@
 #include "KinectToOpenCV.h"
 
 #pragma comment(lib, "Kinect10.lib")
-#pragma comment(lib, "opencv_core231.lib")
-#pragma comment(lib, "opencv_imgproc231.lib")
-#pragma comment(lib, "opencv_highgui231.lib")
+
+#ifdef _WIN32
 
 RGBQUAD Nui_ShortToQuad( unsigned short s );
 
@@ -156,6 +155,6 @@ RGBQUAD Nui_ShortToQuad( unsigned short s )
 	return q;
 }
 
-	
+#endif	
 
 

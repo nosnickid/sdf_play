@@ -9,13 +9,16 @@ DepthCameraRenderer::~DepthCameraRenderer() {
 }
 
 void DepthCameraRenderer::init() {
+#ifdef _WIN32
 	if (SdfCvImageKinect::IsKinectPresent()) {
 		this->image = new SdfCvImageKinect();
 		this->image->init();
 
 		this->rgb = dynamic_cast<AbstractRgbImage*> (this->image);
 		this->depth = dynamic_cast<AbstractDepthMap*> (this->image);
-	} else {
+	}
+#endif
+	if (this->image == NULL) {
 		this->depth = new ManualDepthMap();
 		(dynamic_cast<ManualDepthMap*> (this->depth))->loadDepthMap();
 

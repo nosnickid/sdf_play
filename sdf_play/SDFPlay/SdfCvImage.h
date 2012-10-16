@@ -2,8 +2,6 @@
 #define SDF_CV_IMAGE_H__
 
 
-#include "opencv/cv.h"
-#include "opencv/highgui.h"
 #include "Sys.h"
 #include "glext.h"
 #include "AbstractDepthMap.h"
