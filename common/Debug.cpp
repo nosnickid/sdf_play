@@ -6,28 +6,20 @@
 
 void _debug_print(const char *msg, va_list varg) 
 {
-    char res[500];
-    vsnprintf(res, sizeof(res), msg, varg);
+	char res[500];
+	vsnprintf(res, sizeof(res), msg, varg);
 
 #ifndef WIN32
-    printf(res);
-    printf("\n");
+	printf(res);
+	printf("\n");
 #endif
-    OGLCONSOLE_Print(res);
-    OGLCONSOLE_Print("\n");
+	OGLCONSOLE_Print(res);
+	OGLCONSOLE_Print("\n");
 }
 
-void fatal(const char *fmt, ...)
+static void fatal(const char *fmt, va_list list)
 {
-    va_list list;
-    va_start(list, fmt);
-    fatal(fmt, list);
-    va_end(list);
-}
-
-void fatal(const char *fmt, va_list list)
-{
-    _debug_print(fmt, list);
+	_debug_print(fmt, list);
 
 #ifdef WIN32
 	char res[500];
@@ -36,8 +28,16 @@ void fatal(const char *fmt, va_list list)
 	//SDL_Quit();
 	exit(0);
 #else
-    OGLCONSOLE_SetVisibility(1);
+	exit(0);
 #endif
+}
+
+void fatal(const char *fmt, ...)
+{
+	va_list list;
+	va_start(list, fmt);
+	fatal(fmt, list);
+	va_end(list);
 }
 
 void warning(const char *fmt, ...)
@@ -46,18 +46,17 @@ void warning(const char *fmt, ...)
 	va_start(list, fmt);
 
 	OGLCONSOLE_Print("\n\nWARNING:\n");
-    _debug_print(fmt, list);
-    va_end(list);
-    OGLCONSOLE_SetVisibility(1);
+	_debug_print(fmt, list);
 	va_end(list);
+	OGLCONSOLE_SetVisibility(1);
+
 }
 
 void info(const char *fmt, ...)
 {
 	va_list list;
 	va_start(list, fmt);
-    _debug_print(fmt, list);
-    va_end(list);
+	_debug_print(fmt, list);
 	va_end(list);
 }
 
@@ -65,7 +64,7 @@ void debug(const char *fmt, ...)
 {
 	va_list list;
 	va_start(list, fmt);
-    _debug_print(fmt, list);
+	_debug_print(fmt, list);
 	va_end(list);
 }
 
