@@ -64,7 +64,7 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;GLU32.lib;opengl32.lib;opencv_core242d.lib;opencv_highgui242d.lib;opencv_imgproc242d.lib;Kinect10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;GLU32.lib;opengl32.lib;opencv_core231.lib;opencv_highgui231.lib;opencv_imgproc231.lib;Kinect10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\3rdparty\SDL-1.2.14\lib;$(KINECT10SDK_DIR)\lib\x86;..\..\3rdparty\opencv\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
