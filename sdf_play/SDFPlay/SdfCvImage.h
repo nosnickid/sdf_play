@@ -14,6 +14,8 @@ public:
 	GLuint rgbTexture;
 	GLuint depthTexture;
 
+	virtual ~SdfCvImage();
+
 	virtual void init();
 	virtual void prepareFrame() = 0;
 

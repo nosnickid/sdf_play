@@ -68,7 +68,7 @@ void SdfPlayApp::initGlSlPrograms(void) {
 }
 
 void SdfPlayApp::initConsole(void) {
-	console = OGLCONSOLE_Create();
+	this->console = OGLCONSOLE_Create();
 	OGLCONSOLE_EnterKey(cmdCb);
 	OGLCONSOLE_Print("SDF PLAY V%s\n", SDFPLAY_VERSION);
 	consoleApp = this;
@@ -97,6 +97,17 @@ void SdfPlayApp::init(void) {
 
 	this->qrCodeParser = new QrCodeParser();
 	this->gl2d = new Gl2dRender();
+	this->audio = new SdfPlaySdlAudio();
+	this->audio->init();
+}
+
+SdfPlayApp::~SdfPlayApp(void) {
+	delete this->qrCodeParser;
+	delete this->spotlight;
+	if (this->dc) delete this->dc;
+	consoleApp = NULL;
+	OGLCONSOLE_Destroy(this->console);
+	SDL_Quit();
 }
 
 void SdfPlayApp::run(void) {
@@ -112,7 +123,7 @@ void SdfPlayApp::run(void) {
 
 	debug("SdfPlayApp::run");
 	
-	this->done  = false;
+	this->done = false;
 
    
 	while ( !this->done ) {
@@ -127,10 +138,6 @@ void SdfPlayApp::run(void) {
 		render();
 		SDL_GL_SwapBuffers();
 	}
-
-	delete dc;
-	OGLCONSOLE_Destroy(console);
-	SDL_Quit();
 
 }
 

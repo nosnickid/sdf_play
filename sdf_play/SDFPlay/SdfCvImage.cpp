@@ -1,5 +1,10 @@
 #include "SdfCvImage.h"
 
+SdfCvImage::~SdfCvImage() {
+	if (this->rgbTexture > 0) glDeleteTextures(1, &this->rgbTexture);
+	if (this->depthTexture > 0) glDeleteTextures(1, &this->depthTexture);
+}
+
 void SdfCvImage::init() {
 	this->createTextureForRgb();
 	this->createTextureForDepth();

@@ -15,10 +15,11 @@ public:
 	GLint glslColorTexture;
 	GLint glslSurfaceNormal;
 
-	SdfCvImage *image;
-	AbstractRgbImage *rgb;
-	AbstractDepthMap *depth;
+	SdfCvImage* image;
+	AbstractRgbImage* rgb;
+	AbstractDepthMap* depth;
 
+	DepthCameraRenderer();
 	~DepthCameraRenderer();
 	virtual void init();
 	virtual void prepareFrame();

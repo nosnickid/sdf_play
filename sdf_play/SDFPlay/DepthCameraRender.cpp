@@ -2,10 +2,18 @@
 #include "ManualDepthMap.h"
 #include "glsl.h"
 
+DepthCameraRenderer::DepthCameraRenderer():
+	image(NULL), rgb(NULL), depth(NULL) {
+}
+
 DepthCameraRenderer::~DepthCameraRenderer() {
-	// this is segfaulting. new / delete fubary with the linked opencv? 
-	// not deleting means i don't have to debug it anyway, AAHHEEMM...
-	// delete this->image;
+	if (this->depth != this->image && this->depth) {
+		delete this->depth;
+	}
+	if (this->image != NULL) {
+		delete (this->image);
+	}
+	
 }
 
 void DepthCameraRenderer::init() {
@@ -36,7 +44,7 @@ void DepthCameraRenderer::init() {
 			texcoord = vec2(gl_MultiTexCoord0); \
 		    gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex);\
 			vec4 depth = texture2D(depthTexture, texcoord);\
-			gl_Position += (100 * surfaceNormal * (depth.x));\
+			gl_Position += (100.0 * surfaceNormal * (depth.x));\
 		}";
 	const GLcharARB *tprogFrag = "\
 		varying vec2 texcoord; \

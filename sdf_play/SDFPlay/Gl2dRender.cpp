@@ -18,7 +18,7 @@ void Gl2dRender::render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	std::vector<texture_preview>::iterator it;
-	for(it = this->texturePreviews.begin(); it != this->texturePreviews.end(); it++) {
+	for(it = this->texturePreviews.begin(); it != this->texturePreviews.end(); ++it) {
 		if ((*it).winding == winding_mathsy) {
 			this->textureDebug->renderMathsy((*it).texture, (*it).x, (*it).y, (*it).w, (*it).h);
 		} else {

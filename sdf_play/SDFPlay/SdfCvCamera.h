@@ -17,8 +17,8 @@ public:
 	cv::Mat vidFrame;
 
 	SdfCvCamera(AbstractDepthMap *depthMap);
-	~SdfCvCamera();
-	void init();
+	virtual ~SdfCvCamera();
+	virtual void init();
 	virtual void prepareFrame();
 	void loadTextureFromIpl();
 

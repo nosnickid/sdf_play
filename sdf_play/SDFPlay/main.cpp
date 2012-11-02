@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
 	app->init();
 	app->run();
 
+	delete app;
+
 	return 0;
 }
 

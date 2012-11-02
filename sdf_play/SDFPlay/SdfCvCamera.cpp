@@ -42,7 +42,7 @@ void SdfCvCamera::loadTextureFromIpl() {
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->vidFrame.cols, this->vidFrame.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, this->vidFrame.data);
 
-	checkOpenGL("Image data from cap to texture");	
+	checkOpenGL("Image data from cap to texture");
 }
 
 void SdfCvCamera::prepareFrame() {

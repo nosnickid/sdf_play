@@ -47,10 +47,13 @@ public:
 	DepthCameraRenderer *dc;
 	QrCodeParser *qrCodeParser;
 
+	~SdfPlayApp(void);
+
 	void init(void);
 	void run(void);
 
 	void consoleCallback(OGLCONSOLE_Console console, const char *cmd);
+
 };
 
 

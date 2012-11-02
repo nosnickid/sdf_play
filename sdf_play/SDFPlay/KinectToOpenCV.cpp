@@ -68,10 +68,9 @@ void KinectToOpenCV::pollDepth() {
 		NUI_LOCKED_RECT lockedDepth;
 		DepthFrame->pFrameTexture->LockRect( NULL, &lockedDepth, NULL, NULL );
 		
-		unsigned char* Buffer = (unsigned char*) lockedDepth.pBits;
-
 		cvSetData( this->cvDepthImage, (unsigned char*)lockedDepth.pBits, lockedDepth.Pitch );
 /*		
+		unsigned char* Buffer = (unsigned char*) lockedDepth.pBits;
 		RGBQUAD* rgbLoop =  this->RGBDepth;
 		unsigned short* BufferLoop = (unsigned short*) Buffer;
 
