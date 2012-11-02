@@ -37,3 +37,6 @@ run: $(EXE)
 
 debug: $(EXE)
 	cd runtime && ddd --no-disassemble ../$(EXE)
+
+grind: $(EXE)
+	cd runtime && valgrind --track-origins=yes ../$(EXE)
