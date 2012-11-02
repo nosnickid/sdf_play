@@ -723,7 +723,7 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
     /* If the terminal is hidden we only check for show/hide key */
     if (userConsole->visibility < 1)
     {
-        OGLCONSOLE_Print("%d", e->key.keysym.sym);
+        // OGLCONSOLE_Print("%d", e->key.keysym.sym);
         if (e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_BACKQUOTE)
         {  
             // TODO: Fetch values from OS?
