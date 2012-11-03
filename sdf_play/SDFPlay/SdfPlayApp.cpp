@@ -100,6 +100,11 @@ void SdfPlayApp::init(void) {
 	this->gl2d = new Gl2dRender();
 	this->audio = new SdfPlaySdlAudio();
 	this->audio->init();
+
+	this->audio->registerAudioSource(&this->dtmf);
+	//this->dtmf.playTone(DtmfAudioSource::KEY_A);
+
+	rwtext.init();
 }
 
 SdfPlayApp::~SdfPlayApp(void) {
@@ -201,7 +206,6 @@ void SdfPlayApp::handleSdlEventLoop(void) {
 }
 
 void SdfPlayApp::render(void) {
-	
 	this->drawScene();
 
 	// Draw console.

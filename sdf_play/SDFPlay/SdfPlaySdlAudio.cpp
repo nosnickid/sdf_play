@@ -1,32 +1,37 @@
 #include "SdfPlaySdlAudio.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
 #include "Debug.h"
-
-static int offs = 0;
 
 const static int frequency = 22050;
 
 static void mixaudio(void *unused, Uint8 *stream, int len) {
+	SdfPlaySdlAudio *audio =  (SdfPlaySdlAudio *) unused;
+	audio->tick(stream, len);
+}
+
+void SdfPlaySdlAudio::tick(Uint8 *stream, int len) {
 	if (len != 2 * 512) fatal("Dodgy mixing bro: %d", len);
 
 	// 512 16bit samples
 	const int nosamples = 512;
 	const int nobytes = nosamples * sizeof(Uint16);
 	Uint8 data[nobytes];
-	Sint16 *ptr = (Sint16*)data;
 
-	float timePerSample = 1.0f / (float)frequency;
-	float timeInSeconds = timePerSample * offs;
-	for(int i = 0; i < nosamples; i++, timeInSeconds += timePerSample) {
-		ptr[i] = 16384 * sin(2600 * timeInSeconds * 2 * M_PI);
+	std::vector<AudioSource*>::iterator it;
+	for(it = this->m_AudioSources.begin(); it != this->m_AudioSources.end(); it++) {
+		if ((*it)->getAudio(data, nobytes, nosamples)) {
+			SDL_MixAudio(stream, data, sizeof(data), SDL_MIX_MAXVOLUME);
+		}
 	}
-
-	SDL_MixAudio(stream, data, sizeof(data), SDL_MIX_MAXVOLUME);
-
-	offs += nosamples;
 }
+
+void SdfPlaySdlAudio::registerAudioSource(AudioSource *src) {
+	assERT(src != NULL, "Audio sources must be non-null");
+
+	this->m_AudioSources.push_back(src);
+	src->setParameters(frequency, sizeof(Uint16), false);
+}
+
 
 void SdfPlaySdlAudio::init(void) {
 	SDL_AudioSpec fmt;

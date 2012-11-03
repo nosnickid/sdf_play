@@ -13,6 +13,7 @@
 #include "QrCodeParser.h"
 #include "Gl2dRender.h"
 #include "SdfPlaySdlAudio.h"
+#include "DtmfAudioSource.h"
 
 class SdfPlayApp {
 protected:
@@ -34,6 +35,8 @@ protected:
 	Gl2dRender *gl2d;
 
 	SdfPlaySdlAudio *audio;
+
+	DtmfAudioSource dtmf;
 
 public:
 	SDL_Surface *screen;

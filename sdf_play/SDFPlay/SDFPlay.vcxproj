@@ -99,6 +99,7 @@
     <ClCompile Include="..\..\common\FpsCamera.cpp" />
     <ClCompile Include="..\..\common\RWText.cpp" />
     <ClCompile Include="DepthCameraRender.cpp" />
+    <ClCompile Include="DtmfAudioSource.cpp" />
     <ClCompile Include="Gl2dRender.cpp" />
     <ClCompile Include="glsl.cpp" />
     <ClCompile Include="KinectToOpenCV.cpp" />
@@ -124,7 +125,9 @@
     <ClInclude Include="..\..\common\Sys.h" />
     <ClInclude Include="AbstractDepthMap.h" />
     <ClInclude Include="AbstractRgbImage.h" />
+    <ClInclude Include="AudioSource.h" />
     <ClInclude Include="DepthCameraRenderer.h" />
+    <ClInclude Include="DtmfAudioSource.h" />
     <ClInclude Include="Gl2dRender.h" />
     <ClInclude Include="glext.h" />
     <ClInclude Include="glframebufferext.h" />
