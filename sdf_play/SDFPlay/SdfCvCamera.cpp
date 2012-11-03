@@ -46,7 +46,7 @@ void SdfCvCamera::loadTextureFromIpl() {
 }
 
 void SdfCvCamera::prepareFrame() {
-	if (this->videoCapture.isOpened()) {
+	if (this->videoCapture.isOpened() && this->videoCapture.grab()) {
 		this->videoCapture >> vidFrame;
 
 		if (this->frameTexture > 0) {
