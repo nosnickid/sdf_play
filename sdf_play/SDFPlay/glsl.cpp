@@ -15,9 +15,10 @@ GLhandleARB createShaderFromProgs(const GLcharARB *vertProg, const GLcharARB *fr
 	char infobuffer[1000];
 	int infobufferlen = 0;
 	int compileStatus[] = { 0 };
+	GLuint error;
 	
 	GLhandleARB vertex = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
-	// if ((error = glGetError()) != GL_NO_ERROR) { glslReportError("glCreateShaderObjectARB"); return NULL; }
+	if ((error = glGetError()) != GL_NO_ERROR) { glslReportError("glCreateShaderObjectARB", vertProg); return NULL; }
 
 	glShaderSourceARB(vertex, 1, &vertProg, NULL);
 	glCompileShaderARB(vertex);
@@ -27,6 +28,7 @@ GLhandleARB createShaderFromProgs(const GLcharARB *vertProg, const GLcharARB *fr
 		glGetInfoLogARB(vertex, 999, &infobufferlen, infobuffer);
 		infobuffer[infobufferlen] = 0;
 		glslReportError(vertProg, infobuffer);
+		return NULL;
 	}
 	
 	GLhandleARB frag = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
@@ -39,6 +41,7 @@ GLhandleARB createShaderFromProgs(const GLcharARB *vertProg, const GLcharARB *fr
 		glGetInfoLogARB(frag, 999, &infobufferlen, infobuffer);
 		infobuffer[infobufferlen] = 0;
 		glslReportError(fragProg, infobuffer);
+		return NULL;
 	}
 
 
@@ -46,7 +49,14 @@ GLhandleARB createShaderFromProgs(const GLcharARB *vertProg, const GLcharARB *fr
 	glAttachObjectARB(prog, frag);
 	
 	glLinkProgramARB(prog);
-	// if ((error = glGetError()) != GL_NO_ERROR) { glslReportError("glLinkProgram"); return NULL; }
+	glGetObjectParameterivARB(prog, GL_OBJECT_LINK_STATUS_ARB, compileStatus);
+	if (compileStatus[0] == 0) 
+	{
+		glGetInfoLogARB(prog, 999, &infobufferlen, infobuffer);
+		infobuffer[infobufferlen] = 0;
+		glslReportError(vertProg, infobuffer);
+		return NULL;
+	}
 
 	return prog;
 

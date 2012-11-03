@@ -36,36 +36,63 @@ void DepthCameraRenderer::init() {
 		this->rgb = dynamic_cast<AbstractRgbImage*> (this->image);
 	}
 
+	// Build the depth rendering program
 	const GLcharARB *tprogVert = "\
 		varying vec2 texcoord; \
 		uniform sampler2D depthTexture; \
 		uniform vec4 surfaceNormal; \
 		void main() { \
 			texcoord = vec2(gl_MultiTexCoord0); \
-		    gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex);\
+			gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex);\
 			vec4 depth = texture2D(depthTexture, texcoord);\
 			gl_Position += (100.0 * surfaceNormal * (depth.x));\
-		}";
+		}\n";
+
+	int maxVertexTextureImageUnits;
+	glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxVertexTextureImageUnits);
+	if (maxVertexTextureImageUnits == 0) {
+		warning("Depth camera render will not show depth - no vert shader samplers");
+		tprogVert = "\
+			varying vec2 texcoord; \
+			void main() { \
+				texcoord = vec2(gl_MultiTexCoord0); \
+				gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex); \
+			}";
+	}
+
 	const GLcharARB *tprogFrag = "\
 		varying vec2 texcoord; \
 		uniform sampler2D camTexture; \
 		uniform sampler2D depthTexture; \
 		void main() { \
 			gl_FragColor = texture2D(camTexture, texcoord);\
-		}";
-	this->depthProg = createShaderFromProgs(tprogVert, tprogFrag);
-	glUseProgramObjectARB(this->depthProg);
-	this->glslColorTexture = glGetUniformLocationARB(this->depthProg, "camTexture");
-	//*
-	this->glslDepthTexture = glGetUniformLocationARB(this->depthProg, "depthTexture");
-	this->glslSurfaceNormal = glGetUniformLocationARB(this->depthProg, "surfaceNormal");
-	checkOpenGL("get surface normal from depth prog");
-	GLfloat norm[] = { 0.0f, 1.0f, 0.0f, 1.0f };
-	glUniform4fvARB(this->glslSurfaceNormal, 1, norm);
-	//*/
-	glUniform1iARB(this->glslDepthTexture, 0);
-	glUniform1iARB(this->glslColorTexture, 1);
+		}\n";
+	
 
+	this->depthProg = createShaderFromProgs(tprogVert, tprogFrag);
+	checkOpenGL("create shader prog for depth camera");
+
+	glUseProgramObjectARB(this->depthProg);
+	checkOpenGL("use shader program for depth camera");
+
+	GLint glslDepthTexture;
+	GLint glslColorTexture;
+	GLint glslSurfaceNormal;
+
+	// Get refs to the uniforms in the compiled progam and set the values.
+	glslColorTexture = glGetUniformLocationARB(this->depthProg, "camTexture");
+	glUniform1iARB(glslColorTexture, 1);
+	checkOpenGL("get cam texture location from depth prog");
+	glslDepthTexture = glGetUniformLocationARB(this->depthProg, "depthTexture");
+	checkOpenGL("get depth texture location from depth prog");
+	glUniform1iARB(glslDepthTexture, 0);
+
+	if (maxVertexTextureImageUnits > 0) {
+		GLfloat norm[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+		glslSurfaceNormal = glGetUniformLocationARB(this->depthProg, "surfaceNormal");
+		checkOpenGL("get surface normal from depth prog");
+		glUniform4fvARB(glslSurfaceNormal, 1, norm);
+	}
 
 	checkOpenGL("depth prog");
 }

@@ -4,7 +4,7 @@
 
 static void APIENTRY theGlSlErrorHandler(const GLcharARB *program, const GLcharARB *msg) 
 {
-	fatal("%s\n%s", program, msg);
+	fatal("glsl error: %s\nin: %s", program, msg);
 }
 
 static SdfPlayApp *consoleApp = NULL;

@@ -11,9 +11,6 @@
 class DepthCameraRenderer: public Renderable {
 public:
 	GLhandleARB depthProg;
-	GLint glslDepthTexture;
-	GLint glslColorTexture;
-	GLint glslSurfaceNormal;
 
 	SdfCvImage* image;
 	AbstractRgbImage* rgb;
