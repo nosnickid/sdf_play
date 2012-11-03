@@ -141,7 +141,7 @@ void SdfPlayApp::run(void) {
 			activeCam->MoveOnRelXY(cameraVelocity[0] / 15.0f, cameraVelocity[1] / 15.0f);
 		}
 
-		rwtext.print(0, 20, "Hello from RWTEXT");
+		this->fps.tickFrame();
 
 		render();
 		SDL_GL_SwapBuffers();

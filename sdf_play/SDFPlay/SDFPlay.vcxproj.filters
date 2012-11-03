@@ -102,6 +102,9 @@
     <ClCompile Include="..\..\common\RWText.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="FpsCounter.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h">

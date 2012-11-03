@@ -14,6 +14,7 @@
 #include "Gl2dRender.h"
 #include "SdfPlaySdlAudio.h"
 #include "DtmfAudioSource.h"
+#include "FpsCounter.h"
 
 class SdfPlayApp {
 protected:
@@ -37,6 +38,8 @@ protected:
 	SdfPlaySdlAudio *audio;
 
 	DtmfAudioSource dtmf;
+
+	FpsCounter fps;
 
 public:
 	SDL_Surface *screen;

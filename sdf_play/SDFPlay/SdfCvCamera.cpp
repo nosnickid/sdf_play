@@ -24,6 +24,7 @@ void SdfCvCamera::init() {
 		this->createTextureForFrame();
 		this->videoCapture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
 		this->videoCapture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+		info("Camera operating at %f fps", this->videoCapture.get(CV_CAP_PROP_FPS));
 	}
 }
 
@@ -47,12 +48,11 @@ void SdfCvCamera::loadTextureFromIpl() {
 
 void SdfCvCamera::prepareFrame() {
 	if (this->videoCapture.isOpened() && this->videoCapture.grab()) {
-		this->videoCapture >> vidFrame;
+		/*this->videoCapture >> vidFrame;
 
 		if (this->frameTexture > 0) {
 			this->loadTextureFromIpl();
-		}
-
+		}*/
 	}
 }
 
