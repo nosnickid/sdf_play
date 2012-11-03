@@ -43,7 +43,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(KINECTSDK10_DIR)\inc;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(KINECTSDK10_DIR)\inc;$(FrameworkSDKDir)\include;$(SolutionDir)\..\3rdparty\SDL_image-1.2.12\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);$(KINECTSDK10_DIR)\lib\x86</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(KINECTSDK10_DIR)\inc;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);$(KINECTSDK10_DIR)\lib\x86</LibraryPath>
@@ -64,8 +64,8 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;GLU32.lib;opengl32.lib;opencv_core231.lib;opencv_highgui231.lib;opencv_imgproc231.lib;Kinect10.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\3rdparty\SDL-1.2.14\lib;$(KINECT10SDK_DIR)\lib\x86;..\..\3rdparty\opencv\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;GLU32.lib;opengl32.lib;opencv_core231.lib;opencv_highgui231.lib;opencv_imgproc231.lib;Kinect10.lib;%(AdditionalDependencies);SDL_image.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\3rdparty\SDL-1.2.14\lib;$(KINECT10SDK_DIR)\lib\x86;..\..\3rdparty\opencv\lib_win32;%(AdditionalLibraryDirectories);..\..\3rdparty\SDL_image-1.2.12\lib\x86;</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\common\Debug.cpp" />
     <ClCompile Include="..\..\common\FpsCamera.cpp" />
+    <ClCompile Include="..\..\common\RWText.cpp" />
     <ClCompile Include="DepthCameraRender.cpp" />
     <ClCompile Include="Gl2dRender.cpp" />
     <ClCompile Include="glsl.cpp" />
@@ -119,6 +120,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\common\Debug.h" />
     <ClInclude Include="..\..\common\FpsCamera.h" />
+    <ClInclude Include="..\..\common\RWText.h" />
     <ClInclude Include="..\..\common\Sys.h" />
     <ClInclude Include="AbstractDepthMap.h" />
     <ClInclude Include="AbstractRgbImage.h" />

@@ -1,4 +1,5 @@
 #include "SdfPlayApp.h"
+#include "RWText.h"
 
 #define SDFPLAY_VERSION "0.5-opencv-objectsyeah"
 
@@ -135,6 +136,8 @@ void SdfPlayApp::run(void) {
 			activeCam->MoveOnRelXY(cameraVelocity[0] / 15.0f, cameraVelocity[1] / 15.0f);
 		}
 
+		rwtext.print(0, 20, "Hello from RWTEXT");
+
 		render();
 		SDL_GL_SwapBuffers();
 	}
@@ -225,6 +228,8 @@ void SdfPlayApp::drawScene()
 	this->gl2d->drawTexturePreview(dc->rgb->getRgbImageTexture(),    0, 600 - 240, 320, 240, winding_memory);
 
 	this->gl2d->render();
+
+	rwtext.render();
 
 	checkOpenGL("render depth preview");
 
