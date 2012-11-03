@@ -109,6 +109,7 @@
     <ClCompile Include="SdfCvImage.cpp" />
     <ClCompile Include="SdfCvImageKinect.cpp" />
     <ClCompile Include="SdfPlayApp.cpp" />
+    <ClCompile Include="SdfPlaySdlAudio.cpp" />
     <ClCompile Include="sdl_glframebufferext.cpp" />
     <ClCompile Include="sdl_glsl.cpp" />
     <ClCompile Include="Spotlight.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="SdfCvImage.h" />
     <ClInclude Include="SdfCvImageKinect.h" />
     <ClInclude Include="SdfPlayApp.h" />
+    <ClInclude Include="SdfPlaySdlAudio.h" />
     <ClInclude Include="Spotlight.h" />
     <ClInclude Include="..\..\common\teapot.h" />
     <ClInclude Include="TeapotShadowScene.h" />

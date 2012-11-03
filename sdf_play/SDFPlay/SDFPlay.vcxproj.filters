@@ -31,6 +31,12 @@
     <Filter Include="Source Files\View">
       <UniqueIdentifier>{77ee40bc-f205-4d49-be1a-a46164b874e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{7f61deec-5dba-4d93-8386-ca21a0393666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Audio">
+      <UniqueIdentifier>{8684f907-f8fd-4813-9603-7f65feb2fb02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\common\Debug.cpp">
@@ -89,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="Gl2dRender.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="SdfPlaySdlAudio.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="Gl2dRender.h">
       <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfPlaySdlAudio.h">
+      <Filter>Header Files\Audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

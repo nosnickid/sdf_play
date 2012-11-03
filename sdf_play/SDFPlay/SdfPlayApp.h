@@ -12,9 +12,7 @@
 #include "DepthCameraRenderer.h"
 #include "QrCodeParser.h"
 #include "Gl2dRender.h"
-
-#include "opencv/cv.h"
-#include "opencv/highgui.h"
+#include "SdfPlaySdlAudio.h"
 
 class SdfPlayApp {
 protected:
@@ -34,6 +32,8 @@ protected:
 	bool doQrParse;
 
 	Gl2dRender *gl2d;
+
+	SdfPlaySdlAudio *audio;
 
 public:
 	SDL_Surface *screen;
