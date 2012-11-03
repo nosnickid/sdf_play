@@ -99,6 +99,9 @@
     <ClCompile Include="SdfPlaySdlAudio.cpp">
       <Filter>Source Files\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="DtmfAudioSource.cpp">
+      <Filter>Source Files\Audio</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\common\RWText.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
@@ -179,9 +182,14 @@
     <ClInclude Include="SdfPlaySdlAudio.h">
       <Filter>Header Files\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="AudioSource.h">
+      <Filter>Header Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DtmfAudioSource.h">
+      <Filter>Header Files\Audio</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\common\RWText.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
-

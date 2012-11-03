@@ -16,29 +16,29 @@ bool DtmfAudioSource::getAudio(Uint8* dest, int len, int noSamples) {
 
 	float freq[2] = { 0, 0 };
 
-	if (this->m_CurrentTone && FREQ_697) {
+	if (this->m_CurrentTone & FREQ_697) {
 		freq[0] = 697;
-	} else if (this->m_CurrentTone && FREQ_770) {
+	} else if (this->m_CurrentTone & FREQ_770) {
 		freq[0] = 770;
-	} else if (this->m_CurrentTone && FREQ_852) {
+	} else if (this->m_CurrentTone & FREQ_852) {
 		freq[0] = 852;
-	} else if (this->m_CurrentTone && FREQ_941) {
+	} else if (this->m_CurrentTone & FREQ_941) {
 		freq[0] = 941;
 	}
 
-	if (this->m_CurrentTone && FREQ_1209) {
+	if (this->m_CurrentTone & FREQ_1209) {
 		freq[1] = 1209;
-	} else if (this->m_CurrentTone && FREQ_1336) {
+	} else if (this->m_CurrentTone & FREQ_1336) {
 		freq[1] = 1336;
-	} else if (this->m_CurrentTone && FREQ_1477) {
+	} else if (this->m_CurrentTone & FREQ_1477) {
 		freq[1] = 1477;
-	} else if (this->m_CurrentTone && FREQ_1633) {
+	} else if (this->m_CurrentTone & FREQ_1633) {
 		freq[1] = 1633;
 	}
 
 	freq[0] *= 2 * M_PI;
 	freq[1] *= 2 * M_PI;
-	
+
 
 	Uint16* ptr = (Uint16*)dest;
 
@@ -50,6 +50,7 @@ bool DtmfAudioSource::getAudio(Uint8* dest, int len, int noSamples) {
 	}
 
 	this->m_Offs += noSamples;
+	if (m_Offs > (this->outputFreq * 5)) m_Offs -= (this->outputFreq * 5);
 
 	return true;
 }

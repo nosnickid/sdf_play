@@ -33,7 +33,7 @@ public:
 	static const int KEY_9 = DtmfAudioSource::FREQ_852 | DtmfAudioSource::FREQ_1477;
 	static const int KEY_C = DtmfAudioSource::FREQ_852 | DtmfAudioSource::FREQ_1633;
 
-	static const int KEY_ASTERIX = DtmfAudioSource::FREQ_941 | DtmfAudioSource::FREQ_1209;
+	static const int KEY_ASTERISK = DtmfAudioSource::FREQ_941 | DtmfAudioSource::FREQ_1209;
 	static const int KEY_0 = DtmfAudioSource::FREQ_941 | DtmfAudioSource::FREQ_1336;
 	static const int KEY_HASH = DtmfAudioSource::FREQ_941 | DtmfAudioSource::FREQ_1477;
 	static const int KEY_D = DtmfAudioSource::FREQ_941 | DtmfAudioSource::FREQ_1633;

@@ -22,6 +22,70 @@ void SdfPlayApp::consoleCallback(OGLCONSOLE_Console console, const char *cmd) {
 		this->done = true; 
 	} else if (!strncmp(cmd, "camspam", 7)) {
 		OGLCONSOLE_Output(console, "camspam: %s\n", activeCam->spam().c_str());
+	} else if (!strncmp(cmd, "tone", 4)) {
+		// OGLCONSOLE_Output(console, "camspam: %s\n", activeCam->spam().c_str());
+		char input[50];
+		if (sscanf(cmd, "tone %c", &input) == 1) {
+			switch(input[0]) {
+			case '#':
+				this->dtmf.playTone(DtmfAudioSource::KEY_HASH);
+				break;
+			case '*':
+				this->dtmf.playTone(DtmfAudioSource::KEY_ASTERISK);
+				break;
+			case '0':
+				this->dtmf.playTone(DtmfAudioSource::KEY_0);
+				break;
+			case '1':
+				this->dtmf.playTone(DtmfAudioSource::KEY_1);
+				break;
+			case '2':
+				this->dtmf.playTone(DtmfAudioSource::KEY_2);
+				break;
+			case '3':
+				this->dtmf.playTone(DtmfAudioSource::KEY_3);
+				break;
+			case '4':
+				this->dtmf.playTone(DtmfAudioSource::KEY_4);
+				break;
+			case '5':
+				this->dtmf.playTone(DtmfAudioSource::KEY_5);
+				break;
+			case '6':
+				this->dtmf.playTone(DtmfAudioSource::KEY_6);
+				break;
+			case '7':
+				this->dtmf.playTone(DtmfAudioSource::KEY_7);
+				break;
+			case '8':
+				this->dtmf.playTone(DtmfAudioSource::KEY_8);
+				break;
+			case '9':
+				this->dtmf.playTone(DtmfAudioSource::KEY_9);
+				break;
+			case 'a':
+			case 'A':
+				this->dtmf.playTone(DtmfAudioSource::KEY_A);
+				break;
+			case 'b':
+			case 'B':
+				this->dtmf.playTone(DtmfAudioSource::KEY_B);
+				break;
+			case 'c':
+			case 'C':
+				this->dtmf.playTone(DtmfAudioSource::KEY_C);
+				break;
+			case 'd':
+			case 'D':
+				this->dtmf.playTone(DtmfAudioSource::KEY_D);
+				break;
+			default:
+				this->dtmf.playTone(0);
+				info("usage: tone [0-9a-d*#]");
+			}
+		} else {
+			this->dtmf.playTone(0);
+		}
 	} else {
 		OGLCONSOLE_Output(console, "\"%s\" bad command\n", cmd);
 	}
