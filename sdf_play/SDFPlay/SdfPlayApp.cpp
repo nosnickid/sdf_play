@@ -218,8 +218,8 @@ void SdfPlayApp::drawScene()
 	*/
 	dc->prepareFrame();
 
-	int previewSize = 250;
-	//this->gl2d->drawTexturePreview(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize, winding_mathsy);
+	// int previewSize = 250;
+	// this->gl2d->drawTexturePreview(dc->depth->getDepthMapTexture(),  0,  600 - previewSize, previewSize, previewSize, winding_mathsy);
 	// this->gl2d->drawTexturePreview(spotlight->depthBuffer,          previewSize, 600 - previewSize, previewSize, previewSize);
 	// this->gl2d->drawTexturePreview(dc->rgb->getRgbImageTexture(),    previewSize * 2, 600 - previewSize, previewSize, previewSize, winding_memory);
 	this->gl2d->drawTexturePreview(dc->rgb->getRgbImageTexture(),    0, 600 - 240, 320, 240, winding_memory);
